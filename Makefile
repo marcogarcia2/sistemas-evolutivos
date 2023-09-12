@@ -1,4 +1,19 @@
-all: 
-	gcc -Wall -Werror -Wpedantic -O3 -march=native -c functions.c -I functions.h -o functions.o
-	gcc -Wall -Werror -Wpedantic -O3 -march=native main.c functions.o -I functions.h -o main
-	./main
+APPS = ./apps
+BIN = ./bin
+INCLUDE = ./include
+OBJ = ./obj
+SRC = ./src
+
+all: libed myapps
+
+libed:
+	gcc -Wall -Werror -Wpedantic -O3 -march=native -c $(SRC)/functions.c -I $(INCLUDE) -o $(OBJ)/functions.o
+
+myapps:
+	gcc -Wall -Werror -Wpedantic -O3 -march=native $(APPS)/main.c $(OBJ)/*.o -I $(INCLUDE) -o $(BIN)/main
+
+run:
+	$(BIN)/main
+
+clear:
+	rm $(BIN)/* $(OBJ)/*
