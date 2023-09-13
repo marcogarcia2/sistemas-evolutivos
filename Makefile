@@ -19,4 +19,4 @@ run:
 	$(BIN)/main
 
 clear:
-	rm $(BIN)/* $(OBJ)/* ./individuals/* ./pics/* values.txt
+	rm ./individuals/file* ./pics/pic* values.txt

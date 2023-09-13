@@ -73,7 +73,7 @@ int main(int argc, char *argv[]) {
     // Abre o arquivo e realiza a leitura dos valores
     FILE *arq = fopen("values.txt", "r");
     if (arq == NULL) {
-        printf("Erro ao abrir o arquivo.\n");
+        printf("Error while opening file \"values.txt\".\n");
         return 1;
     }
     int a = 0, b = 0; // Lê primeiro da esquerda para a direita, depois de cima para baixo
