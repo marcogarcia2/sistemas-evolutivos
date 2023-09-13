@@ -2,8 +2,8 @@
 
 #define WIDTH 960
 #define HEIGHT 600
-#define POP_SIZE 100
-#define MAX_GENERATIONS 50
+#define POP_SIZE 50
+#define MAX_GENERATIONS 25
 #define MUTATION_RATE 0.1
 
 // Estrutura para representar um indivíduo
@@ -59,6 +59,7 @@ void mutate(Individual *individual) {
 int main(int argc, char *argv[]) {
 
     srand(time(NULL));
+    clock_t fim, ini = clock();
 
     // Declaração das variáveis //*---*//*---*//*---*//*---*//*---*//*---*//*---*//
     int ***target = alloc_3d_matrix(WIDTH, HEIGHT, 3); // Matriz alvo RGB
@@ -69,24 +70,23 @@ int main(int argc, char *argv[]) {
     char filename[25];
     //*---*//*---*//*---*//*---*//*---*//*---*//*---*//*---*//*---*//*---*//*---*//
 
-
     // Abre o arquivo e realiza a leitura dos valores
     FILE *arq = fopen("values.txt", "r");
     if (arq == NULL) {
         printf("Erro ao abrir o arquivo.\n");
         return 1;
     }
-    int a = 0, b = 0;
-    while (fscanf(arq, " (%d, %d, %d)\n", &target[a][b][0], &target[a][b][1], &target[a][b][2]) == 3){
+    int a = 0, b = 0; // Lê primeiro da esquerda para a direita, depois de cima para baixo
+    while (fscanf(arq, "(%d, %d, %d)\n", &target[a][b][0], &target[a][b][1], &target[a][b][2]) == 3){
         b++;
         if(b % HEIGHT == 0){
             b = 0;
             a++;
         }
     }
-    fclose(arq); // fecha o arquivo
+    fclose(arq);
 
-    // Inicialize a população com valores aleatórios
+    // Inicializando a população com valores aleatórios
     for (int i = 0; i < POP_SIZE; i++) {
         population[i].rgb = alloc_3d_matrix(WIDTH, HEIGHT, 3);
         for (int j = 0; j < WIDTH; j++) {
@@ -122,7 +122,7 @@ int main(int argc, char *argv[]) {
                 
                 // Se o filho for melhor que o melhor indivíduo, substitua-o
                 if (child.fitness < bestFitness) {
-                    //printf("Best Individual %d\n", arq_num);
+                    printf("Best individual found: %d\n", arq_num);
                     copy_3d_matrix(bestIndividual.rgb, child.rgb, WIDTH, HEIGHT, 3);
                     bestFitness = child.fitness;
 
@@ -130,7 +130,7 @@ int main(int argc, char *argv[]) {
                     snprintf(filename, sizeof(filename), "individuals/file%d.txt", arq_num++);
                     FILE *file = fopen(filename, "w"); 
                     if (file == NULL){
-                        printf("Erro ao criar o arquivo %s\n", filename);
+                        printf("Error while creating file %s\n", filename);
                         return 1;
                     }
                     write_3d_matrix(file, bestIndividual.rgb, WIDTH, HEIGHT, 3);
@@ -141,21 +141,19 @@ int main(int argc, char *argv[]) {
     }
 
     // Fim do Algoritmo Genético, exibindo o resultado
-    printf("Melhor indivíduo encontrado com fitness %d:\n", bestFitness);
-    /*for (int i = 0; i < WIDTH; i++) {
-        for (int j = 0; j < HEIGHT; j++) {
-            printf("(%d, %d, %d) ", bestIndividual.rgb[i][j][0], bestIndividual.rgb[i][j][1], bestIndividual.rgb[i][j][2]);
-        }
-        printf("\n");
-    }*/
+    printf("\nBest individual found! Fitness: %d\n", bestFitness);
 
     // Liberando a memória de todas as alocações
     free_3d_matrix(target, WIDTH, HEIGHT);
-    for(int i = 0; i < POP_SIZE; i++)
+    for (int i = 0; i < POP_SIZE; i++)
         free_3d_matrix(population[i].rgb, WIDTH, HEIGHT);
     free(population);
     free_3d_matrix(bestIndividual.rgb, WIDTH, HEIGHT);
     free_3d_matrix(child.rgb, WIDTH, HEIGHT);
+
+    // Calculando o tempo decorrido em todo o processo
+    fim = clock() - ini;
+    printf("Time ellapsed: %.2f seconds\n", (float)fim/CLOCKS_PER_SEC);
 
     return 0;
 }

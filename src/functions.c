@@ -34,15 +34,13 @@ void copy_3d_matrix(int ***dest, int ***src, int width, int height, int depth) {
     }
 }
 
-
 void write_3d_matrix(FILE *file, int ***matrix, int width, int height, int depth){
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
             for (int k = 0; k < depth; k++) {
                 fprintf(file, "%d ", matrix[i][j][k]);
-                if (k < depth - 1) fprintf(file, " ");
             }
-            if (i != width - 1) fprintf(file, "\n");
+            fprintf(file, "\n");
         }
     }
 }

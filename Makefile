@@ -4,7 +4,7 @@ INCLUDE = ./include
 OBJ = ./obj
 SRC = ./src
 
-all: libed myapps
+all: libed myapps gen
 
 libed:
 	gcc -Wall -Werror -Wpedantic -O3 -march=native -c $(SRC)/functions.c -I $(INCLUDE) -o $(OBJ)/functions.o
@@ -12,8 +12,11 @@ libed:
 myapps:
 	gcc -Wall -Werror -Wpedantic -O3 -march=native $(APPS)/main.c $(OBJ)/*.o -I $(INCLUDE) -o $(BIN)/main
 
+gen: 
+	python3 generator.py
+
 run:
 	$(BIN)/main
 
 clear:
-	rm $(BIN)/* $(OBJ)/*
+	rm $(BIN)/* $(OBJ)/* ./individuals/* ./pics/* values.txt
