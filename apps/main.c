@@ -4,12 +4,12 @@
 #define HEIGHT 600
 #define POP_SIZE 50
 #define MAX_GENERATIONS 25
-#define MUTATION_RATE 0.1
+#define MUTATION_RATE 0.001
 
 // Estrutura para representar um indivíduo
 typedef struct _individual{
     int ***rgb;                 // Matriz de três dimensões com os valores RGB
-    int fitness;              // Valor de aptidão, quanto menor melhor
+    int fitness;                // Valor de aptidão, quanto menor melhor
 } Individual;
 
 // Função para calcular a diferença entre duas cores RGB
@@ -65,19 +65,19 @@ int main(int argc, char *argv[]) {
     int ***target = alloc_3d_matrix(WIDTH, HEIGHT, 3); // Matriz alvo RGB
     Individual *population = (Individual*)malloc(sizeof(Individual) * POP_SIZE); // population é um array de indivíduos
     Individual bestIndividual, child;  // Melhor indivíduo encontrado e filho
-    int bestFitness = INT_MAX;    // Inicialize com um valor alto
+    int bestFitness = INT_MAX;    // Inicializando com um valor alto
     int arq_num = 1;
     char filename[25];
     //*---*//*---*//*---*//*---*//*---*//*---*//*---*//*---*//*---*//*---*//*---*//
 
     // Abre o arquivo e realiza a leitura dos valores
-    FILE *arq = fopen("values.txt", "r");
+    FILE *arq = fopen("individuals/target.txt", "r");
     if (arq == NULL) {
         printf("Error while opening file \"values.txt\".\n");
         return 1;
     }
     int a = 0, b = 0; // Lê primeiro da esquerda para a direita, depois de cima para baixo
-    while (fscanf(arq, "(%d, %d, %d)\n", &target[a][b][0], &target[a][b][1], &target[a][b][2]) == 3){
+    while (fscanf(arq, "%d %d %d\n", &target[a][b][0], &target[a][b][1], &target[a][b][2]) == 3){
         b++;
         if(b % HEIGHT == 0){
             b = 0;

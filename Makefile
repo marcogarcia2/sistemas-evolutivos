@@ -13,10 +13,13 @@ myapps:
 	gcc -Wall -Werror -Wpedantic -O3 -march=native $(APPS)/main.c $(OBJ)/*.o -I $(INCLUDE) -o $(BIN)/main
 
 gen: 
-	python3 generator.py
+	python3 $(APPS)/generator.py
 
 run:
 	$(BIN)/main
 
+show:
+	python3 $(APPS)/show.py
+
 clear:
-	rm ./individuals/file* ./pics/pic* values.txt
+	rm ./individuals/file* ./individuals/target* ./pics/pic*

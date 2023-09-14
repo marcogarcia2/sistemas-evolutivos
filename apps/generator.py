@@ -1,7 +1,15 @@
 from PIL import Image
+import os
+
+# Obter o diretório do script Python atual
+script_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Caminhos para salvar os arquivos nas pastas corretas
+image_path = os.path.join(script_dir, '../noite-estrelada.jpeg')
+target_path = os.path.join(script_dir, '../individuals/')
 
 # Imagem desejada
-image = Image.open('noite-estrelada.jpeg')
+image = Image.open(image_path)
 
 # Obtém os valores RGB dos pixels como uma matriz
 pixel_values = list(image.getdata())
@@ -14,10 +22,10 @@ width, height = image.size
 # print(pixel_values[width * y + x])
 
 # Abre o arquivo no modo de escrita
-with open('values.txt', 'w') as file:
+with open(target_path + 'target.txt', 'w') as file:
     for i, pixel in enumerate(pixel_values):
         # Escreve uma linha no arquivo no formato desejado, (R, G, B)
-        file.write(f"({pixel[0]}, {pixel[1]}, {pixel[2]})")
+        file.write(f"{pixel[0]} {pixel[1]} {pixel[2]}")
         if i < len(pixel_values) - 1:
             file.write('\n')
 
