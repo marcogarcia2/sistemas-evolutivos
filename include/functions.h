@@ -9,9 +9,9 @@
 
 #define WIDTH 960
 #define HEIGHT 600
-#define POP_SIZE 2
+#define POP_SIZE 10
 #define MAX_GENERATIONS 25
-#define MUTATION_RATE 0.1
+#define MUTATION_RATE 0.5
 
 // Estrutura para representar um indivíduo
 typedef struct _individual{

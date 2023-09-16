@@ -60,7 +60,6 @@ int main(int argc, char *argv[]) {
         }
     }   
 
-    
     // Percorrendo world para determinar os melhores
     Individual bestOne;
     for (int i = 0; i < WIDTH; i++){
@@ -86,26 +85,38 @@ int main(int argc, char *argv[]) {
             for (int j = 0; j < HEIGHT; j++){
 
                 // Sobre cada pixel, vamos iterar sobre a população
-                for (int k = 0; k < POP_SIZE; k++){
+                for (int k = 0; k < POP_SIZE/2; k++){
                     
                     // world[i][j][k] é o indivíduo da iteração atual
-                    int parent1index = rand() % POP_SIZE;
-                    int parent2index = rand() % POP_SIZE;
+                    int parent1index = 2 * k;
+                    int parent2index = 2 * k + 1;
                     crossover(&world[i][j][parent1index], &world[i][j][parent2index], &child);
                     mutate(&child);
                     evaluateFitness(&child, target[i][j]);
 
                     // Agora que temos a criança, vamos testá-la
+                    if (k % 2 == 0) {
+                        // Quanto menor o fitness melhor
+                        if (child.totalFitness < world[i][j][k].totalFitness){
+                            // Se a cor da criança for melhor que o ind. da iteração, copio a cor 
+                            world[i][j][parent1index] = child;
 
-                    // Quanto menor o fitness melhor
-                    if (child.totalFitness < world[i][j][k].totalFitness){
-                        // Se a cor da criança for melhor que o ind. da iteração, copio a cor 
-                        world[i][j][k] = child;
+                            if (child.totalFitness < best[i][j].totalFitness)
+                                // Se a cor da criança for melhor que a cor do melhor, copio a cor
+                                best[i][j] = child;
+                        }
+                    } 
+                    else{
+                        // Quanto menor o fitness melhor
+                        if (child.totalFitness < world[i][j][k].totalFitness){
+                            // Se a cor da criança for melhor que o ind. da iteração, copio a cor 
+                            world[i][j][parent2index] = child;
 
-                        if (child.totalFitness < best[i][j].totalFitness)
-                            // Se a cor da criança for melhor que a cor do melhor, copio a cor
-                            best[i][j] = child;
-                    }   
+                            if (child.totalFitness < best[i][j].totalFitness) 
+                                // Se a cor da criança for melhor que a cor do melhor, copio a cor
+                                best[i][j] = child;
+                        }  
+                    }
                 }
             }
         }

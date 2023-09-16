@@ -1,5 +1,6 @@
 from PIL import Image
 import os
+import cv2
 
 print("Loading video...")
 
@@ -15,7 +16,7 @@ txt_path = os.path.join(script_dir, os.pardir, 'individuals')
 pics_path = os.path.join(script_dir, os.pardir, 'pics')
 
 # Listar os arquivos .txt no diretório
-txt_files = [f for f in os.listdir(txt_path) if f.endswith('.txt')]
+txt_files = [f for f in os.listdir(txt_path) if f.endswith('.txt') and f.startswith('file')]
 
 # Iterar sobre os arquivos .txt
 for txt_file in txt_files:
@@ -35,7 +36,7 @@ for txt_file in txt_files:
                 pixel_values.append(tuple(values))
 
     # Crie uma nova imagem com base nas triplas RGB
-    image = Image.new('RGB', (width, height))
+    pic = Image.new('RGB', (width, height))
 
     # Preencha a imagem com os pixels com base nas triplas RGB lidas
     for x in range(width):
@@ -43,8 +44,27 @@ for txt_file in txt_files:
             pixel_index = y * width + x
             if pixel_index < len(pixel_values):
                 pixel_color = pixel_values[pixel_index]
-                image.putpixel((x, y), pixel_color)
+                pic.putpixel((x, y), pixel_color)
 
-    # Salve a imagem gerada com um nome correspondente (por exemplo, pic1.png, pic2.png, ...)
-    output_image_name = os.path.join(pics_path, f'pic{os.path.splitext(txt_file)[0][4:]}.png')
-    image.save(output_image_name, 'PNG')
+    # Salve a imagem gerada com um nome correspondente (por exemplo, pic01.png, pic02.png, ...)
+    output_image_name = os.path.join(pics_path, f'pic{str(int(os.path.splitext(txt_file)[0][4:])).zfill(3)}.png')
+    pic.save(output_image_name, 'PNG')
+
+# Gerando um vídeo a partir das imagens
+output_video = 'Evolution.mp4'
+fps = 2
+
+images = [img for img in os.listdir(pics_path) if img.endswith(".png") and img.startswith('pic')]
+images.sort()
+
+frame = cv2.imread(os.path.join(pics_path, images[0]))
+
+# Use o codec H.264 para o vídeo
+fourcc = cv2.VideoWriter_fourcc(*'H264')
+video = cv2.VideoWriter(output_video, fourcc, fps, (width, height))
+for image in images:
+    img = cv2.imread(os.path.join(pics_path, image))
+    video.write(img)
+
+cv2.destroyAllWindows()
+video.release()
