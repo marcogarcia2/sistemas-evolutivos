@@ -1,6 +1,8 @@
 from PIL import Image
 import os
 
+print("Loading video...")
+
 # dimensões da imagem
 width = 960  # Largura da imagem
 height = 600  # Altura da imagem

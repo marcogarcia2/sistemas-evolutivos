@@ -15,11 +15,12 @@ myapps:
 gen: 
 	python3 $(APPS)/generator.py
 
-run:
+run: 
 	$(BIN)/main
-
-show:
 	python3 $(APPS)/show.py
+	
 
 clear:
 	rm ./individuals/file* ./individuals/target* ./pics/pic*
+
+debug: clear all run

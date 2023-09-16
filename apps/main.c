@@ -1,79 +1,38 @@
 #include "functions.h"
 
-#define WIDTH 960
-#define HEIGHT 600
-#define POP_SIZE 50
-#define MAX_GENERATIONS 25
-#define MUTATION_RATE 0.001
-
-// Estrutura para representar um indivíduo
-typedef struct _individual{
-    int ***rgb;                 // Matriz de três dimensões com os valores RGB
-    int fitness;                // Valor de aptidão, quanto menor melhor
-} Individual;
-
-// Função para calcular a diferença entre duas cores RGB
-int colorDifference(int color1[3], int color2[3]) {
-    int diff = 0;
-    for (int i = 0; i < 3; i++) {
-        diff += abs(color1[i] - color2[i]);
-    }
-    return diff;
-}
-
-// Função para avaliar a aptidão de um indivíduo
-int evaluateFitness(Individual *individual, int ***target) {
-    int totalDifference = 0;
-    for (int i = 0; i < WIDTH; i++) {
-        for (int j = 0; j < HEIGHT; j++) {
-            totalDifference += colorDifference(individual->rgb[i][j], target[i][j]);   
-        }
-    }
-    return totalDifference;
-}
-
-// Função para realizar cruzamento por média entre dois indivíduos
-void crossover(Individual *parent1, Individual *parent2, Individual *child) {
-    for (int i = 0; i < WIDTH; i++) {
-        for (int j = 0; j < HEIGHT; j++) {
-            for (int k = 0; k < 3; k++) {
-                child->rgb[i][j][k] = (parent1->rgb[i][j][k] + parent2->rgb[i][j][k]) / 2;
-            }
-        }
-    }
-}
-
-// Função para aplicar mutação a um indivíduo
-void mutate(Individual *individual) {
-    for (int i = 0; i < WIDTH; i++) {
-        for (int j = 0; j < HEIGHT; j++) {
-            for (int k = 0; k < 3; k++) {
-                if ((float)rand() / RAND_MAX < MUTATION_RATE) {
-                    individual->rgb[i][j][k] = rand() % 256;
-                }
-            }
-        }
-    }
-}
-
 int main(int argc, char *argv[]) {
 
     srand(time(NULL));
     clock_t fim, ini = clock();
-
-    // Declaração das variáveis //*---*//*---*//*---*//*---*//*---*//*---*//*---*//
-    int ***target = alloc_3d_matrix(WIDTH, HEIGHT, 3); // Matriz alvo RGB
-    Individual *population = (Individual*)malloc(sizeof(Individual) * POP_SIZE); // population é um array de indivíduos
-    Individual bestIndividual, child;  // Melhor indivíduo encontrado e filho
-    int bestFitness = INT_MAX;    // Inicializando com um valor alto
-    int arq_num = 1;
     char filename[25];
-    //*---*//*---*//*---*//*---*//*---*//*---*//*---*//*---*//*---*//*---*//*---*//
+    
+    ///////////////////////////////////////////////////
+
+    //* Alocando toda a memória necessária em um único loop (eficiência) *//
+    int ***target = (int***)malloc(WIDTH * sizeof(int**));
+    Individual ***world = (Individual***)malloc(WIDTH * sizeof(Individual**));
+    Individual **best = (Individual**)malloc(WIDTH * sizeof(Individual*));
+    for (int i = 0; i < WIDTH; i++){
+        target[i] = (int**)malloc(HEIGHT * sizeof(int*));
+        world[i] = (Individual**)malloc(HEIGHT * sizeof(Individual*));
+        best[i] = (Individual*)malloc(HEIGHT * sizeof(Individual));
+        //best é a matriz que irá guardar os melhores indivíduos a cada geração
+        for(int j = 0; j < HEIGHT; j++){
+            target[i][j] = (int*)malloc(3 * sizeof(int)); // target é a matriz alvo RGB
+            world[i][j] = (Individual*)malloc(POP_SIZE * sizeof(Individual)); //Agora, world[i][j] é uma população.
+        }
+    }
+
+    /*  
+        target é a matriz alvo RGB;
+        world é uma matriz tal que world[i][j] é uma população de POP_SIZE indivíduos
+        best é uma matriz que irá guardar os melhores indivíduos de cada geração      
+    */
 
     // Abre o arquivo e realiza a leitura dos valores
     FILE *arq = fopen("individuals/target.txt", "r");
     if (arq == NULL) {
-        printf("Error while opening file \"values.txt\".\n");
+        printf("Error while opening file \"target.txt\".\n");
         return 1;
     }
     int a = 0, b = 0; // Lê primeiro da esquerda para a direita, depois de cima para baixo
@@ -86,70 +45,99 @@ int main(int argc, char *argv[]) {
     }
     fclose(arq);
 
-    // Inicializando a população com valores aleatórios
-    for (int i = 0; i < POP_SIZE; i++) {
-        population[i].rgb = alloc_3d_matrix(WIDTH, HEIGHT, 3);
-        for (int j = 0; j < WIDTH; j++) {
-            for (int k = 0; k < HEIGHT; k++) {
-                for (int l = 0; l < 3; l++) {
+    //Inicializando o mundo com valores aleatórios
+    for (int i = 0; i < WIDTH; i++){
+        for (int j = 0; j < HEIGHT; j++){
+            for (int k = 0; k < POP_SIZE; k++){
+
+                for (int l = 0; l < 3; l++) 
+                    // Gera valores aleatórios para cada canal de cor
+                    world[i][j][k].rgb[l] = rand() % 256;
+
+                // Compara população de pixels com o pixel correspondente na matriz alvo
+                evaluateFitness(&world[i][j][k], target[i][j]);
+            }
+        }
+    }   
+
+    
+    // Percorrendo world para determinar os melhores
+    Individual bestOne;
+    for (int i = 0; i < WIDTH; i++){
+        for (int j = 0; j < HEIGHT; j++){
+            bestOne = world[i][j][0];
+            for (int k = 1; k < POP_SIZE; k++){
+
+                //
+                if (bestOne.totalFitness > world[i][j][k].totalFitness)
+                    bestOne = world[i][j][k];
+                
+            }
+            best[i][j] = bestOne;
+        }
+    }
+
+    // Algoritmo Evolutivo
+    Individual child;
+    for (int generation = 0; generation < MAX_GENERATIONS; generation++) {
+        printf("Gen %d\n", generation);
+        // Vamos percorrer toda a imagem 
+        for (int i = 0; i < WIDTH; i++){
+            for (int j = 0; j < HEIGHT; j++){
+
+                // Sobre cada pixel, vamos iterar sobre a população
+                for (int k = 0; k < POP_SIZE; k++){
                     
-                    population[i].rgb[j][k][l] = rand() % 256;
+                    // world[i][j][k] é o indivíduo da iteração atual
+                    int parent1index = rand() % POP_SIZE;
+                    int parent2index = rand() % POP_SIZE;
+                    crossover(&world[i][j][parent1index], &world[i][j][parent2index], &child);
+                    mutate(&child);
+                    evaluateFitness(&child, target[i][j]);
+
+                    // Agora que temos a criança, vamos testá-la
+
+                    // Quanto menor o fitness melhor
+                    if (child.totalFitness < world[i][j][k].totalFitness){
+                        // Se a cor da criança for melhor que o ind. da iteração, copio a cor 
+                        world[i][j][k] = child;
+
+                        if (child.totalFitness < best[i][j].totalFitness)
+                            // Se a cor da criança for melhor que a cor do melhor, copio a cor
+                            best[i][j] = child;
+                    }   
                 }
             }
         }
-        population[i].fitness = evaluateFitness(&population[i], target);
-    }
 
-    // Algoritmo evolutivo
-    bestIndividual.rgb = alloc_3d_matrix(WIDTH, HEIGHT, 3);
-    child.rgb = alloc_3d_matrix(WIDTH, HEIGHT, 3);
-    for (int generation = 0; generation < MAX_GENERATIONS; generation++) {
-        for (int i = 0; i < POP_SIZE; i++) {
-            
-            // Criando um filho diferente a cada iteração, com pais aleatórios dentre a população
-            int parent1Index = rand() % POP_SIZE;
-            int parent2Index = rand() % POP_SIZE;
-            crossover(&population[parent1Index], &population[parent2Index], &child);
-            mutate(&child);
-            child.fitness = evaluateFitness(&child, target);
-
-            // Quanto menor o fitness, melhor o indivíduo
-            if (child.fitness < population[i].fitness) {
-
-                // Se o filho for melhor que o indivíduo da iteração, substitua-o
-                copy_3d_matrix(population[i].rgb, child.rgb, WIDTH, HEIGHT, 3); 
-                population[i].fitness = child.fitness;
-                
-                // Se o filho for melhor que o melhor indivíduo, substitua-o
-                if (child.fitness < bestFitness) {
-                    printf("Best individual found: %d\n", arq_num);
-                    copy_3d_matrix(bestIndividual.rgb, child.rgb, WIDTH, HEIGHT, 3);
-                    bestFitness = child.fitness;
-
-                    // Salvando o novo melhor indivíduo em um arquivo
-                    snprintf(filename, sizeof(filename), "individuals/file%d.txt", arq_num++);
-                    FILE *file = fopen(filename, "w"); 
-                    if (file == NULL){
-                        printf("Error while creating file %s\n", filename);
-                        return 1;
-                    }
-                    write_3d_matrix(file, bestIndividual.rgb, WIDTH, HEIGHT, 3);
-                    fclose(file);
-                }
-            } 
+        // Ao final da geração, salvo a matriz dos melhores indivíduos em um arquivo
+        snprintf(filename, sizeof(filename), "individuals/file%d.txt", generation + 1);
+        FILE *file = fopen(filename, "w"); 
+        if (file == NULL){
+            printf("Error while creating file %s\n", filename);
+            return 1;
         }
+        write_ind_matrix(file, best, WIDTH, HEIGHT);
+        fclose(file);
+        //printf("best[200][300] = (%d, %d, %d)\n", best[200][300].rgb[0], best[200][300].rgb[1], best[200][300].rgb[2]);
     }
-
+    
     // Fim do Algoritmo Genético, exibindo o resultado
-    printf("\nBest individual found! Fitness: %d\n", bestFitness);
+    // printf("\nBest individual found! Fitness: %d\n");
 
-    // Liberando a memória de todas as alocações
-    free_3d_matrix(target, WIDTH, HEIGHT);
-    for (int i = 0; i < POP_SIZE; i++)
-        free_3d_matrix(population[i].rgb, WIDTH, HEIGHT);
-    free(population);
-    free_3d_matrix(bestIndividual.rgb, WIDTH, HEIGHT);
-    free_3d_matrix(child.rgb, WIDTH, HEIGHT);
+    //* Liberando a memória de todas as alocações *//
+    for (int i = 0; i < WIDTH; i++) {
+        for (int j = 0; j < HEIGHT; j++) {
+            free(target[i][j]);
+            free(world[i][j]);
+        }
+        free(target[i]);
+        free(world[i]);
+        free(best[i]);
+    }
+    free(target);
+    free(world);
+    free(best);
 
     // Calculando o tempo decorrido em todo o processo
     fim = clock() - ini;
