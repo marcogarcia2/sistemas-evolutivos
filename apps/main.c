@@ -6,7 +6,6 @@ int main(int argc, char *argv[]) {
     clock_t fim, ini = clock();
     char filename[25];
     
-    ///////////////////////////////////////////////////
 
     //* Alocando toda a memória necessária em um único loop (eficiência) *//
     int ***target = (int***)malloc(WIDTH * sizeof(int**));
@@ -30,20 +29,20 @@ int main(int argc, char *argv[]) {
     */
 
     // Abre o arquivo e realiza a leitura dos valores
-    FILE *arq = fopen("individuals/target.txt", "r");
-    if (arq == NULL) {
+    FILE *src = fopen("individuals/target.txt", "r");
+    if (src == NULL) {
         printf("Error while opening file \"target.txt\".\n");
         return 1;
     }
     int a = 0, b = 0; // Lê primeiro da esquerda para a direita, depois de cima para baixo
-    while (fscanf(arq, "%d %d %d\n", &target[a][b][0], &target[a][b][1], &target[a][b][2]) == 3){
+    while (fscanf(src, "%d %d %d\n", &target[a][b][0], &target[a][b][1], &target[a][b][2]) == 3){
         b++;
         if(b % HEIGHT == 0){
             b = 0;
             a++;
         }
     }
-    fclose(arq);
+    fclose(src);
 
     //Inicializando o mundo com valores aleatórios
     for (int i = 0; i < WIDTH; i++){
@@ -56,9 +55,21 @@ int main(int argc, char *argv[]) {
 
                 // Compara população de pixels com o pixel correspondente na matriz alvo
                 evaluateFitness(&world[i][j][k], target[i][j]);
+
+                // Gravando a população inicial aleatória para exibir no vídeo
+                best[i][j] = world[i][j][0];
             }
         }
     }   
+
+    // Escrevendo a imagem aleatória
+    FILE *file = fopen("individuals/file0.txt", "w");
+    if (file == NULL){
+        printf("Error while creating file individuals/file0.txt");
+        return 1;
+    }
+    write_ind_matrix(file, best, WIDTH, HEIGHT, 3);
+    fclose(file);
 
     // Percorrendo world para determinar os melhores
     Individual bestOne;
@@ -128,9 +139,8 @@ int main(int argc, char *argv[]) {
             printf("Error while creating file %s\n", filename);
             return 1;
         }
-        write_ind_matrix(file, best, WIDTH, HEIGHT);
+        write_ind_matrix(fopen(filename, "w"), best, WIDTH, HEIGHT, 3);
         fclose(file);
-        //printf("best[200][300] = (%d, %d, %d)\n", best[200][300].rgb[0], best[200][300].rgb[1], best[200][300].rgb[2]);
     }
     
     // Fim do Algoritmo Genético, exibindo o resultado

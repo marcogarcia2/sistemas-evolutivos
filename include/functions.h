@@ -8,8 +8,8 @@
 
 #define WIDTH 960
 #define HEIGHT 600
-#define POP_SIZE 10
-#define MAX_GENERATIONS 50
+#define POP_SIZE 2
+#define MAX_GENERATIONS 100
 #define MUTATION_RATE 0.1
 
 // Estrutura para representar um indivíduo
@@ -32,7 +32,7 @@ void mutate(Individual *individual);
 void copy_3d_matrix(int ***dest, int ***src, int width, int height, int depth);
 
 // Função que escreve os dados da matriz em um arquivo
-void write_ind_matrix(FILE *file, Individual **matrix, int width, int height);
+void write_ind_matrix(FILE *file, Individual **matrix, int width, int height, int depth);
 
 
 #endif

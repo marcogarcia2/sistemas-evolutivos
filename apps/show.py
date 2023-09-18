@@ -52,7 +52,7 @@ for txt_file in txt_files:
 
 # Gerando um vídeo a partir das imagens
 output_video = 'Evolution.mp4'
-fps = 2
+fps = 3
 
 images = [img for img in os.listdir(pics_path) if img.endswith(".png") and img.startswith('pic')]
 images.sort()
@@ -60,7 +60,7 @@ images.sort()
 frame = cv2.imread(os.path.join(pics_path, images[0]))
 
 # Use o codec H.264 para o vídeo
-fourcc = cv2.VideoWriter_fourcc(*'H264')
+fourcc = cv2.VideoWriter_fourcc(*'mp4v')
 video = cv2.VideoWriter(output_video, fourcc, fps, (width, height))
 for image in images:
     img = cv2.imread(os.path.join(pics_path, image))

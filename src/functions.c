@@ -26,6 +26,7 @@ void mutate(Individual *individual) {
     }
 }
 
+// Função que copia dados de uma matriz 3D para outra 
 void copy_3d_matrix(int ***dest, int ***src, int width, int height, int depth) {
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
@@ -36,10 +37,11 @@ void copy_3d_matrix(int ***dest, int ***src, int width, int height, int depth) {
     }
 }
 
-void write_ind_matrix(FILE *file, Individual **matrix, int width, int height){
+// Função que escreve os dados da matriz em um arquivo
+void write_ind_matrix(FILE *file, Individual **matrix, int width, int height, int depth){
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
-            for (int k = 0; k < 3; k++) {
+            for (int k = 0; k < depth; k++) {
                 fprintf(file, "%d ", matrix[i][j].rgb[k]);
             }
             fprintf(file, "\n");
