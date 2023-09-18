@@ -14,24 +14,16 @@ void crossover(const Individual *parent1, const Individual *parent2, Individual 
     for (int i = 0; i < 3; i++){
         child->rgb[i] = (parent1->rgb[i] + parent2->rgb[i]) / 2;
     }
-    /*
-    // definir algum padrão aleatório para herdar os genes
-    for (int i = 0; i < 3; i++){
-        if (i == 0) child->rgb[i] = parent1->rgb[i];
-        else if (i == 1) child->rgb[i] = parent2->rgb[i];
-        else{
-            if (rand() % 2 == 0) child->rgb[i] = parent1->rgb[i];
-            else child->rgb[i] = parent2->rgb[i];
-        }
-    }
-    */
 }
 
 // Função para aplicar mutação a um indivíduo
 void mutate(Individual *individual) {
-    for (int c = 0; c < 3; c++)
-        if ((float)(rand() % 10) / 100 <= MUTATION_RATE)
-            individual->rgb[c] = rand() % 256;    
+    for (int c = 0; c < 3; c++){
+        float chance = (float)(rand() % 100) / 100;
+        if (chance <= MUTATION_RATE){
+            individual->rgb[c] = rand() % 256; 
+        }   
+    }
 }
 
 void copy_3d_matrix(int ***dest, int ***src, int width, int height, int depth) {

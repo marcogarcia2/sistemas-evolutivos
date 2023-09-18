@@ -5,13 +5,12 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
-#include <limits.h>
 
 #define WIDTH 960
 #define HEIGHT 600
 #define POP_SIZE 10
-#define MAX_GENERATIONS 25
-#define MUTATION_RATE 0.5
+#define MAX_GENERATIONS 50
+#define MUTATION_RATE 0.1
 
 // Estrutura para representar um indivíduo
 typedef struct _individual{
@@ -28,9 +27,6 @@ void crossover(const Individual *parent1, const Individual *parent2, Individual 
 
 // Função para aplicar mutação a um indivíduo
 void mutate(Individual *individual);
-
-// Função que aloca memória para uma matriz de três dimensões
-int ***alloc_3d_matrix(int width, int height, int depth);
 
 // Função que copia dados de uma matriz 3D para outra 
 void copy_3d_matrix(int ***dest, int ***src, int width, int height, int depth);
