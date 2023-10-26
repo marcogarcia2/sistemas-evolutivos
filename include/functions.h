@@ -14,7 +14,7 @@
 
 // Estrutura para representar um indivíduo
 typedef struct _individual{
-    int rgb[3];                    // Matriz de três dimensões com os valores RGB
+    int rgb[3];                    // Vetor que guarda os valores RGB
     int fitness[3];                // Valores de aptidão, quanto menores melhor
     int totalFitness;              // Soma das aptidões de cana canal de cor
 } Individual;

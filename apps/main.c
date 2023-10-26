@@ -1,11 +1,15 @@
 #include "functions.h"
 
+/*
+    target é uma matriz de WIDTH x HEIGHT x 3 elementos, ela irá guardar os valores RGB
+    de cada pixel da nossa imagem alvo. 
+*/
+
 int main(int argc, char *argv[]) {
 
     srand(time(NULL));
     clock_t fim, ini = clock();
-    char filename[25];
-    
+    char filename[25];    
 
     //* Alocando toda a memória necessária em um único loop (eficiência) *//
     int ***target = (int***)malloc(WIDTH * sizeof(int**));
@@ -34,6 +38,8 @@ int main(int argc, char *argv[]) {
         printf("Error while opening file \"target.txt\".\n");
         return 1;
     }
+
+    // Aqui está dando erro de memória
     int a = 0, b = 0; // Lê primeiro da esquerda para a direita, depois de cima para baixo
     while (fscanf(src, "%d %d %d\n", &target[a][b][0], &target[a][b][1], &target[a][b][2]) == 3){
         b++;
@@ -41,6 +47,7 @@ int main(int argc, char *argv[]) {
             b = 0;
             a++;
         }
+        if (a == WIDTH) break;
     }
     fclose(src);
 
@@ -144,7 +151,11 @@ int main(int argc, char *argv[]) {
     }
     
     // Fim do Algoritmo Genético, exibindo o resultado
-    // printf("\nBest individual found! Fitness: %d\n");
+
+    // Calculando o tempo decorrido em todo o processo
+    fim = clock() - ini;
+    printf("Time ellapsed: %.2f seconds\n", (float)fim/CLOCKS_PER_SEC);
+    printf("Best Fitness: ");
 
     //* Liberando a memória de todas as alocações *//
     for (int i = 0; i < WIDTH; i++) {
@@ -159,10 +170,6 @@ int main(int argc, char *argv[]) {
     free(target);
     free(world);
     free(best);
-
-    // Calculando o tempo decorrido em todo o processo
-    fim = clock() - ini;
-    printf("Time ellapsed: %.2f seconds\n", (float)fim/CLOCKS_PER_SEC);
 
     return 0;
 }

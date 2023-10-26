@@ -18,13 +18,7 @@ gen:
 run: 
 	$(BIN)/main
 	python3 $(APPS)/show.py
-	./Evolution.mp4
-	
-
-show: 
-	python3 $(APPS)/show.py
 
 clear:
 	rm ./individuals/file* ./individuals/target* ./pics/pic* Evolution.mp4
 
-debug: clear all run show
