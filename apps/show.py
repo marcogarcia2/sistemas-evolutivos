@@ -1,6 +1,5 @@
 from PIL import Image
-import os
-import cv2
+import os, cv2
 
 print("Loading video...")
 
@@ -26,7 +25,7 @@ for txt_file in txt_files:
     # Lista para armazenar as triplas RGB lidas do arquivo
     pixel_values = []
 
-    # Abra o arquivo de triplas RGB para leitura
+    # Abrindo o arquivo de triplas RGB para leitura
     with open(txt_file_path, 'r') as file:
         for line in file:
             # Divida a linha por espaços em branco e converta os valores para inteiros

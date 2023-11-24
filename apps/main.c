@@ -155,7 +155,7 @@ int main(int argc, char *argv[]) {
     // Calculando o tempo decorrido em todo o processo
     fim = clock() - ini;
     printf("Time ellapsed: %.2f seconds\n", (float)fim/CLOCKS_PER_SEC);
-    printf("Best Fitness: ");
+    //printf("Best Fitness: ");
 
     //* Liberando a memória de todas as alocações *//
     for (int i = 0; i < WIDTH; i++) {

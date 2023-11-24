@@ -14,7 +14,6 @@ image = Image.open(image_path)
 # Obtém os valores RGB dos pixels como uma matriz
 pixel_values = list(image.getdata())
 width, height = image.size
-#print(width, height)
 
 # O programa lê primeiro da esquerda para a direita, e depois de cima para baixo
 # Portanto, para saber o valor de um pixel:
@@ -24,7 +23,7 @@ width, height = image.size
 # Abre o arquivo no modo de escrita
 with open(target_path + 'target.txt', 'w') as file:
     for i, pixel in enumerate(pixel_values):
-        # Escreve uma linha no arquivo no formato desejado, (R, G, B)
+        # Escreve uma linha no arquivo no formato desejado (R, G, B)
         file.write(f"{pixel[0]} {pixel[1]} {pixel[2]}")
         if i < len(pixel_values) - 1:
             file.write('\n')
