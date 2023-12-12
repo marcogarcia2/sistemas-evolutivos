@@ -96,6 +96,7 @@ int main(int argc, char *argv[]) {
 
     // Algoritmo Evolutivo
     Individual child;
+    
     for (int generation = 0; generation < MAX_GENERATIONS; generation++) {
         printf("Gen %d\n", generation);
         // Vamos percorrer toda a imagem 
@@ -112,12 +113,14 @@ int main(int argc, char *argv[]) {
                     mutate(&child);
                     evaluateFitness(&child, target[i][j]);
 
+                    int random_index = rand() % POP_SIZE;
+
                     // Agora que temos a criança, vamos testá-la
                     if (k % 2 == 0) {
                         // Quanto menor o fitness melhor
-                        if (child.totalFitness < world[i][j][k].totalFitness){
+                        if (child.totalFitness < world[i][j][random_index].totalFitness){
                             // Se a cor da criança for melhor que o ind. da iteração, copio a cor 
-                            world[i][j][parent1index] = child;
+                            world[i][j][random_index] = child;
 
                             if (child.totalFitness < best[i][j].totalFitness)
                                 // Se a cor da criança for melhor que a cor do melhor, copio a cor
@@ -126,9 +129,9 @@ int main(int argc, char *argv[]) {
                     } 
                     else{
                         // Quanto menor o fitness melhor
-                        if (child.totalFitness < world[i][j][k].totalFitness){
+                        if (child.totalFitness < world[i][j][random_index].totalFitness){
                             // Se a cor da criança for melhor que o ind. da iteração, copio a cor 
-                            world[i][j][parent2index] = child;
+                            world[i][j][random_index] = child;
 
                             if (child.totalFitness < best[i][j].totalFitness) 
                                 // Se a cor da criança for melhor que a cor do melhor, copio a cor

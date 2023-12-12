@@ -8,9 +8,9 @@
 
 #define WIDTH 960
 #define HEIGHT 600
-#define POP_SIZE 2
-#define MAX_GENERATIONS 100
-#define MUTATION_RATE 0.1
+#define POP_SIZE 5
+#define MAX_GENERATIONS 50
+#define MUTATION_RATE 0.5
 
 // Estrutura para representar um indivíduo
 typedef struct _individual{
@@ -27,9 +27,6 @@ void crossover(const Individual *parent1, const Individual *parent2, Individual 
 
 // Função para aplicar mutação a um indivíduo
 void mutate(Individual *individual);
-
-// Função que copia dados de uma matriz 3D para outra 
-void copy_3d_matrix(int ***dest, int ***src, int width, int height, int depth);
 
 // Função que escreve os dados da matriz em um arquivo
 void write_ind_matrix(FILE *file, Individual **matrix, int width, int height, int depth);
