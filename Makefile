@@ -17,6 +17,8 @@ gen:
 
 run: 
 	$(BIN)/main
+
+show:
 	python3 $(APPS)/show.py
 
 clean:

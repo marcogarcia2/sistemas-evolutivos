@@ -22,6 +22,7 @@ width, height = image.size
 
 # Abre o arquivo no modo de escrita
 with open(target_path + 'target.txt', 'w') as file:
+    file.write(f"{width} {height}\n")
     for i, pixel in enumerate(pixel_values):
         # Escreve uma linha no arquivo no formato desejado (R, G, B)
         file.write(f"{pixel[0]} {pixel[1]} {pixel[2]}")

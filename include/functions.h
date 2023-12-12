@@ -19,6 +19,13 @@ typedef struct _individual{
     int totalFitness;              // Soma das aptidões de cana canal de cor
 } Individual;
 
+
+// Funcionalidade 1
+void func1(void);
+
+// Funcionalidade 2
+//void func2(void);
+
 // Função para avaliar a aptidão de um indivíduo
 void evaluateFitness(Individual *individual, const int target[3]);
 
