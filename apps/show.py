@@ -3,14 +3,16 @@ import os, cv2
 
 print("Loading video...")
 
-# dimensões da imagem
-width = 450  # Largura da imagem
-height = 600  # Altura da imagem
-
-# Obter o diretório do script Python atual
+# Obtendo as dimensões da imagem
 script_dir = os.path.dirname(os.path.abspath(__file__))
+target_path = os.path.join(script_dir, '../individuals/target.txt')
+with open(target_path, 'r') as file:
+    values = file.readline().strip()
+width = int(values.split()[0])
+height = int(values.split()[1])
 
 # Caminhos para salvar os arquivos nas pastas corretas
+script_dir = os.path.dirname(os.path.abspath(__file__))
 txt_path = os.path.join(script_dir, os.pardir, 'individuals')
 pics_path = os.path.join(script_dir, os.pardir, 'pics')
 
