@@ -6,8 +6,6 @@
 #include <time.h>
 #include <math.h>
 
-#define WIDTH 960
-#define HEIGHT 600
 #define POP_SIZE 5
 #define MAX_GENERATIONS 50
 #define MUTATION_RATE 0.5

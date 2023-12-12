@@ -4,7 +4,7 @@ import os, cv2
 print("Loading video...")
 
 # dimensões da imagem
-width = 960  # Largura da imagem
+width = 450  # Largura da imagem
 height = 600  # Altura da imagem
 
 # Obter o diretório do script Python atual
