@@ -17,20 +17,26 @@ typedef struct _individual{
     int totalFitness;              // Soma das aptidões de cana canal de cor
 } Individual;
 
-// Função que cria o indivíduo perfeito alvo
-int ***create_target(int width, int height);
+/*--------------- Funções de criação, desalocação e inicialização ------------*/
+//Alocação
+int ***create_target(int width, int height); // Função que cria o indivíduo perfeito alvo
+Individual ***create_world(int width, int height); // Função que cria o mundo
+Individual **create_best(int width, int height); // Função que cria a matriz de melhores indivíduos
 
-// Função que cria o mundo
-Individual ***create_world(int width, int height);
+//Desalocação
+void destroy_world(Individual**** world_ref, int width, int height);
+void destroy_target(int**** target_ref, int width, int height);
+void destroy_best(Individual*** best_ref, int width);
 
-// Função que cria a matriz de melhores indivíduos
-Individual **create_best(int width, int height);
+//Inicialização
+void initialize_world(Individual ***world, Individual **best, int ***target, int width, int height); // Função que incializa o mundo com valores aleatórios
 
-// Função que lê a matriz alvo
-void read_target(int ***target, FILE *src, int width, int height);
+/*---------------- Funções relacionadas a arquivos ---------------*/
+void read_target(int ***target, FILE *src, int width, int height); // Função que lê a matriz alvo a partir de um arquivo txt
 
-// Função que incializa o mundo com valores aleatórios
-void initialize_world(Individual ***world, Individual **best, int ***target, int width, int height);
+
+/*---------------- Funções relacionadas à evolução em si -------------*/
+void evolution(Individual ***world, int ***target, Individual **best, int width, int height, char *filename, char *fitness_file); //Engloba o processo evolutivo em si
 
 // Função que percorre o mundo e encontra os melhores
 void find_best(Individual **best, Individual ***world, int width, int height);
@@ -47,6 +53,7 @@ void mutate(Individual *individual);
 // Função que calcula a média dos Fitness da matriz best
 int fitness_mean(Individual **best, int width, int height);
 
+/*----------------- Funções auxiliares ----------*/
 // Função que escreve os dados da matriz em um arquivo
 void write_ind_matrix(FILE *file, Individual **matrix, int width, int height, int depth);
 

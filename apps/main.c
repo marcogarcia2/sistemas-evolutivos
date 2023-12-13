@@ -21,25 +21,19 @@ int main(int argc, char *argv[]) {
 
     // Lendo do cabeçalho as dimensões da imagem
     int width, height;
-    fscanf(src, "%d %d\n", &width, &height);
+    if (fscanf(src, "%d %d\n", &width, &height) != 2) //Feito isso pelo fato de warnings estarem sendo tratados como erros
+        printf("Debug");
 
     // Criando as matrizes para guardar os dados
-    int ***target = create_target(width, height);
-    Individual ***world = create_world(width, height);
-    Individual **best = create_best(width, height);
+    int ***target = create_target(width, height); //Matriz que representa a img, onde cada índice/pixel é um int[3] (RGB)
+    Individual ***world = create_world(width, height); //Matriz tal que world[i][j] é uma população de POP_SIZE indivíduos
+    Individual **best = create_best(width, height); //Matriz que irá guardar os melhores indivíduos de cada geração
 
-    /*  
-        target é a matriz alvo RGB;
-        world é uma matriz tal que world[i][j] é uma população de POP_SIZE indivíduos
-        best é uma matriz que irá guardar os melhores indivíduos de cada geração      
-    */
-
-    // Lendo a matriz alvo
+    // Lendo a matriz alvo e guardando em target
     read_target(target, src, width, height);
     
     // Fechando o arquivo alvo
     fclose(src);
-
 
     //Inicializando o mundo com valores aleatórios
     initialize_world(world, best, target, width, height); 
@@ -136,18 +130,9 @@ int main(int argc, char *argv[]) {
     //printf("Best Fitness: ");
 
     // Liberando a memória de todas as alocações
-    for (int i = 0; i < width; i++) {
-        for (int j = 0; j < height; j++) {
-            free(target[i][j]);
-            free(world[i][j]);
-        }
-        free(target[i]);
-        free(world[i]);
-        free(best[i]);
-    }
-    free(target);
-    free(world);
-    free(best);
+    destroy_world(&world, width, height);
+    destroy_target(&target, width, height);
+    destroy_best(&best, width);
     fclose(fitness_file);
 
     return 0;

@@ -1,6 +1,6 @@
 #include "functions.h"
-
-// Função que cria o indivíduo perfeito alvo
+/*--------------- Funções de criação, desalocação e inicialização ------------*/
+//Alocação
 int ***create_target(int width, int height){
 
     int ***matrix = (int***)malloc(width * sizeof(int**));
@@ -15,7 +15,6 @@ int ***create_target(int width, int height){
     return matrix;
 }
 
-// Função que cria o mundo
 Individual ***create_world(int width, int height){
     
     Individual ***matrix = (Individual***)malloc(width * sizeof(Individual**));
@@ -30,7 +29,6 @@ Individual ***create_world(int width, int height){
     return matrix;
 }
 
-// Função que cria a matriz de melhores indivíduos
 Individual **create_best(int width, int height){
         
     Individual **matrix = (Individual**)malloc(width * sizeof(Individual*));
@@ -42,20 +40,47 @@ Individual **create_best(int width, int height){
     return matrix;
 }
 
-// Função que lê a matriz alvo
-void read_target(int ***target, FILE *src, int width, int height){
-    int a = 0, b = 0; // Lê primeiro da esquerda para a direita, depois de cima para baixo
+//Desalocação
+void destroy_world(Individual**** world_ref, int width, int height){
+    Individual ***world = *world_ref;
 
-        while (fscanf(src, "%d %d %d\n", &target[a][b][0], &target[a][b][1], &target[a][b][2]) == 3){
-            b++;
-            if(b % height == 0){
-                b = 0;
-                a++;
-            }
-            if (a == width) break;
+    for (int i = 0; i < width; i++){
+        for (int j = 0; j < height; j++){
+            free(world[i][j]);
         }
+        free(world[i]);
+    }
+    free(world);
+
+    world_ref = NULL;
 }
 
+void destroy_target(int**** target_ref, int width, int height){
+    int ***target = *target_ref;
+
+    for (int i = 0; i < width; i++){
+        for (int j = 0; j < height; j++){
+            free(target[i][j]);
+        }
+        free(target[i]);
+    }
+    free(target);
+
+    target_ref = NULL;
+}
+
+void destroy_best(Individual*** best_ref, int width){
+    Individual **best = *best_ref;
+
+    for (int i = 0; i < width; i++){
+        free(best[i]);
+    }
+    free(best);
+
+    best_ref = NULL;
+}
+
+//Inicialização
 void initialize_world(Individual ***world, Individual **best, int ***target, int width, int height){
 
      for (int i = 0; i < width; i++){
@@ -76,8 +101,23 @@ void initialize_world(Individual ***world, Individual **best, int ***target, int
     }  
 }
 
+/*---------------- Funções relacionadas a arquivos ---------------*/
+void read_target(int ***target, FILE *src, int width, int height){
+    int a = 0, b = 0; // Lê primeiro da esquerda para a direita, depois de cima para baixo
+
+        while (fscanf(src, "%d %d %d\n", &target[a][b][0], &target[a][b][1], &target[a][b][2]) == 3){
+            b++;
+            if(b % height == 0){
+                b = 0;
+                a++;
+            }
+            if (a == width) break;
+        }
+}
+
+/*---------------- Funções relacionadas à evolução em si -------------*/
 // Função que percorre o mundo e encontra os melhores
-void find_best(Individual **best, Individual ***world, int width, int height){
+void find_best(Individual **best, Individual ***world, int width, int height){ 
     Individual bestOne;
     for (int i = 0; i < width; i++){
         for (int j = 0; j < height; j++){
@@ -95,7 +135,7 @@ void find_best(Individual **best, Individual ***world, int width, int height){
 }
 
 // Função para avaliar a aptidão de um indivíduo
-void evaluateFitness(Individual *individual, const int target[3]) {
+void evaluateFitness(Individual *individual, const int target[3]) { 
     individual->totalFitness = 0;
     for (int i = 0; i < 3; i++){
         individual->fitness[i] = abs(individual->rgb[i] - target[i]);
@@ -104,14 +144,14 @@ void evaluateFitness(Individual *individual, const int target[3]) {
 }
 
 // Função para realizar cruzamento por média entre dois indivíduos
-void crossover(const Individual *parent1, const Individual *parent2, Individual *child) {
+void crossover(const Individual *parent1, const Individual *parent2, Individual *child) { 
     for (int i = 0; i < 3; i++){
         child->rgb[i] = (parent1->rgb[i] + parent2->rgb[i]) / 2;
     }
 }
 
 // Função para aplicar mutação a um indivíduo
-void mutate(Individual *individual) {
+void mutate(Individual *individual) { 
     for (int c = 0; c < 3; c++){
         int chance = rand() % 100 + 1;
         if (chance <= MUTATION_RATE){
@@ -131,8 +171,8 @@ int fitness_mean(Individual **best, int width, int height){
     return mean / (width * height);
 }
 
-// Função que escreve os dados da matriz em um arquivo
-void write_ind_matrix(FILE *file, Individual **matrix, int width, int height, int depth){
+/*----------------- Funções auxiliares ----------*/
+void write_ind_matrix(FILE *file, Individual **matrix, int width, int height, int depth){ // Função que escreve os dados da matriz em um arquivo
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
             for (int k = 0; k < depth; k++) {
@@ -142,8 +182,4 @@ void write_ind_matrix(FILE *file, Individual **matrix, int width, int height, in
         }
     }
 }
-
-
-
-
 
