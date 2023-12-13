@@ -23,11 +23,10 @@ run:
 	python3 $(APPS)/show.py	
 
 clean:
-	rm ./individuals/file* ./individuals/target* ./pics/pic* Evolution.mp4
+	rm ./individuals/file* ./individuals/target* fitness.txt ./pics/pic* Evolution.mp4
 
-commit: 
-	git pull origin main
+commit:
 	git add .
-	git commit -m "Modularizando"
+	git commit -m "Automatic Commit"
 	git push origin main
 

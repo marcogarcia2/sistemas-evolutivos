@@ -53,28 +53,28 @@ int main(int argc, char *argv[]) {
     write_ind_matrix(file, best, width, height, 3);
     fclose(file);
 
-    // Percorrendo world para determinar os melhores
-    Individual bestOne;
-    for (int i = 0; i < width; i++){
-        for (int j = 0; j < height; j++){
-            bestOne = world[i][j][0];
-            for (int k = 1; k < POP_SIZE; k++){
-
-                //
-                if (bestOne.totalFitness > world[i][j][k].totalFitness)
-                    bestOne = world[i][j][k];
-                
-            }
-            best[i][j] = bestOne;
-        }
+    // Este arquivo salvará as médias dos fitness
+    FILE *fitness_file = fopen("fitness.txt", "w");
+    if (fitness_file == NULL){
+        printf("Error while creating file fitness.txt");
+        exit(1);
     }
 
-    // Algoritmo Evolutivo
+    // Percorrendo world para determinar os melhores
+    find_best(best, world, width, height);
+
+    // Escrevendo o fitness médio da geração 0
+    fprintf(fitness_file, "%d,", fitness_mean(best, width, height));
+
+
+
+    //* Algoritmo Genético *//
+    
     Individual child;
     
     for (int generation = 0; generation < MAX_GENERATIONS; generation++) {
 
-        printf("Gen %d\n", generation);
+        printf("Gen %d\n", generation+1);
 
         // Vamos percorrer toda a imagem 
         for (int i = 0; i < width; i++){
@@ -89,33 +89,28 @@ int main(int argc, char *argv[]) {
                     crossover(&world[i][j][parent1index], &world[i][j][parent2index], &child);
                     mutate(&child);
                     evaluateFitness(&child, target[i][j]);
+                }
 
-                    int random_index = rand() % POP_SIZE;
+                // Agora que temos a criança, vamos substitir o pior indivíduo
+                
+                // Esta variável irá guardar a localização do pior indivíduo na População
+                int location = 0;
 
-                    // Agora que temos a criança, vamos testá-la
-                    if (k % 2 == 0) {
-                        // Quanto menor o fitness melhor
-                        if (child.totalFitness < world[i][j][random_index].totalFitness){
-                            // Se a cor da criança for melhor que o ind. da iteração, copio a cor 
-                            world[i][j][random_index] = child;
-
-                            if (child.totalFitness < best[i][j].totalFitness)
-                                // Se a cor da criança for melhor que a cor do melhor, copio a cor
-                                best[i][j] = child;
-                        }
-                    } 
-                    else{
-                        // Quanto menor o fitness melhor
-                        if (child.totalFitness < world[i][j][random_index].totalFitness){
-                            // Se a cor da criança for melhor que o ind. da iteração, copio a cor 
-                            world[i][j][random_index] = child;
-
-                            if (child.totalFitness < best[i][j].totalFitness) 
-                                // Se a cor da criança for melhor que a cor do melhor, copio a cor
-                                best[i][j] = child;
-                        }  
+                // Loopando sobre a população
+                int aux = world[i][j][0].totalFitness;
+                for (int k = 1; k < POP_SIZE; k++){
+                    if (aux < world[i][j][k].totalFitness){
+                        aux = world[i][j][k].totalFitness;
+                        location = k;
                     }
                 }
+
+                // Substituindo o pior indivíduo pela criança
+                world[i][j][location] = child;
+
+                // A criança pode ser melhor que o melhor indivíduo da geração
+                if (child.totalFitness < best[i][j].totalFitness)
+                    best[i][j] = child;
             }
         }
 
@@ -128,6 +123,9 @@ int main(int argc, char *argv[]) {
         }
         write_ind_matrix(fopen(filename, "w"), best, width, height, 3);
         fclose(file);
+
+        // Escrevendo o fitness médio
+        fprintf(fitness_file, "%d,", fitness_mean(best, width, height));
     }
     
     // Fim do Algoritmo Genético
@@ -150,6 +148,7 @@ int main(int argc, char *argv[]) {
     free(target);
     free(world);
     free(best);
+    fclose(fitness_file);
 
     return 0;
 }

@@ -76,6 +76,23 @@ void initialize_world(Individual ***world, Individual **best, int ***target, int
     }  
 }
 
+// Função que percorre o mundo e encontra os melhores
+void find_best(Individual **best, Individual ***world, int width, int height){
+    Individual bestOne;
+    for (int i = 0; i < width; i++){
+        for (int j = 0; j < height; j++){
+            bestOne = world[i][j][0];
+            for (int k = 1; k < POP_SIZE; k++){
+
+                // Se o fitness desse indivíduo for menor que o do melhor até então, ele é o novo melhor
+                if (bestOne.totalFitness > world[i][j][k].totalFitness)
+                    bestOne = world[i][j][k];
+                
+            }
+            best[i][j] = bestOne;
+        }
+    }
+}
 
 // Função para avaliar a aptidão de um indivíduo
 void evaluateFitness(Individual *individual, const int target[3]) {
@@ -96,11 +113,22 @@ void crossover(const Individual *parent1, const Individual *parent2, Individual 
 // Função para aplicar mutação a um indivíduo
 void mutate(Individual *individual) {
     for (int c = 0; c < 3; c++){
-        float chance = (float)(rand() % 100) / 100;
+        int chance = rand() % 100 + 1;
         if (chance <= MUTATION_RATE){
             individual->rgb[c] = rand() % 256; 
         }   
     }
+}
+
+// Função que calcula a média dos Fitness da matriz best
+int fitness_mean(Individual **best, int width, int height){
+    int mean = 0;
+    for (int i = 0; i < width; i++){
+        for (int j = 0; j < height; j++){
+                mean += best[i][j].totalFitness;
+        }
+    }
+    return mean / (width * height);
 }
 
 // Função que escreve os dados da matriz em um arquivo
