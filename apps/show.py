@@ -53,7 +53,7 @@ for txt_file in txt_files:
 
 # Gerando um vídeo a partir das imagens
 output_video = 'Evolution.mp4'
-fps = 3
+fps = 5
 
 images = [img for img in os.listdir(pics_path) if img.endswith(".png") and img.startswith('pic')]
 images.sort()

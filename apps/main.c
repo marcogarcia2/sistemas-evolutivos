@@ -1,6 +1,5 @@
 #include "functions.h"
 
-// Funcionalidade 1
 /*
     target é uma matriz de width x height x 3 elementos, ela irá guardar os valores RGB
     de cada pixel da nossa imagem alvo. 
