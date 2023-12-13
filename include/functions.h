@@ -7,7 +7,7 @@
 #include <math.h>
 
 #define POP_SIZE 4
-#define MAX_GENERATIONS 100
+#define MAX_GENERATIONS 200
 #define MUTATION_RATE 10 // escolher entre 0 e 100
 
 // Estrutura para representar um indivíduo

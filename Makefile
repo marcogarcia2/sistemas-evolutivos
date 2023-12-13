@@ -26,7 +26,8 @@ clean:
 	rm ./individuals/file* ./individuals/target* fitness.txt ./pics/pic* Evolution.mp4
 
 commit:
+	make clean
 	git add .
-	git commit -m "Automatic Commit"
+	git commit -m "Ajustes finais"
 	git push origin main
 

@@ -5,7 +5,7 @@ import os
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Caminhos para salvar os arquivos nas pastas corretas
-image_path = os.path.join(script_dir, '../noite-estrelada.jpeg')
+image_path = os.path.join(script_dir, '../1.jpeg')
 target_path = os.path.join(script_dir, '../individuals/')
 
 # Imagem desejada
