@@ -17,12 +17,20 @@ typedef struct _individual{
     int totalFitness;              // Soma das aptidões de cana canal de cor
 } Individual;
 
+// Função que cria o indivíduo perfeito alvo
+int ***create_target(int width, int height);
 
-// Funcionalidade 1
-void func1(void);
+// Função que cria o mundo
+Individual ***create_world(int width, int height);
 
-// Funcionalidade 2
-//void func2(void);
+// Função que cria a matriz de melhores indivíduos
+Individual **create_best(int width, int height);
+
+// Função que lê a matriz alvo
+void read_target(int ***target, FILE *src, int width, int height);
+
+// Função que incializa o mundo com valores aleatórios
+void initialize_world(Individual ***world, Individual **best, int ***target, int width, int height);
 
 // Função para avaliar a aptidão de um indivíduo
 void evaluateFitness(Individual *individual, const int target[3]);

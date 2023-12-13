@@ -28,6 +28,6 @@ clean:
 commit: 
 	git pull origin main
 	git add .
-	git commit -m "automatic commit"
+	git commit -m "Modularizando"
 	git push origin main
 

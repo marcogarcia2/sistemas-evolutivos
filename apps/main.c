@@ -12,35 +12,21 @@ int main(int argc, char *argv[]) {
     clock_t fim, ini = clock();
     char filename[25];    
 
-    // Abre o arquivo e realiza a leitura dos valores
+    // Abrindo o arquivo alvo
     FILE *src = fopen("individuals/target.txt", "r");
     if (src == NULL) {
         printf("Error while opening file \"target.txt\".\n");
         return 1;
     }
+
+    // Lendo do cabeçalho as dimensões da imagem
     int width, height;
     fscanf(src, "%d %d\n", &width, &height);
 
-    // create_target();
-    // create_world();
-    // create_best();
-
-    // mudar essas constantes para variáveis acima
-
-    //* Alocando toda a memória necessária em um único loop (eficiência) *//
-    int ***target = (int***)malloc(width * sizeof(int**));
-    Individual ***world = (Individual***)malloc(width * sizeof(Individual**));
-    Individual **best = (Individual**)malloc(width * sizeof(Individual*));
-    for (int i = 0; i < width; i++){
-        target[i] = (int**)malloc(height * sizeof(int*));
-        world[i] = (Individual**)malloc(height * sizeof(Individual*));
-        best[i] = (Individual*)malloc(height * sizeof(Individual));
-        //best é a matriz que irá guardar os melhores indivíduos a cada geração
-        for(int j = 0; j < height; j++){
-            target[i][j] = (int*)malloc(3 * sizeof(int)); // target é a matriz alvo RGB
-            world[i][j] = (Individual*)malloc(POP_SIZE * sizeof(Individual)); //Agora, world[i][j] é uma população.
-        }
-    }
+    // Criando as matrizes para guardar os dados
+    int ***target = create_target(width, height);
+    Individual ***world = create_world(width, height);
+    Individual **best = create_best(width, height);
 
     /*  
         target é a matriz alvo RGB;
@@ -49,35 +35,14 @@ int main(int argc, char *argv[]) {
     */
 
     // Lendo a matriz alvo
-    int a = 0, b = 0; // Lê primeiro da esquerda para a direita, depois de cima para baixo
-    while (fscanf(src, "%d %d %d\n", &target[a][b][0], &target[a][b][1], &target[a][b][2]) == 3){
-        b++;
-        if(b % height == 0){
-            b = 0;
-            a++;
-        }
-        if (a == width) break;
-    }
+    read_target(target, src, width, height);
+    
+    // Fechando o arquivo alvo
     fclose(src);
 
 
     //Inicializando o mundo com valores aleatórios
-    for (int i = 0; i < width; i++){
-        for (int j = 0; j < height; j++){
-            for (int k = 0; k < POP_SIZE; k++){
-
-                for (int l = 0; l < 3; l++) 
-                    // Gera valores aleatórios para cada canal de cor
-                    world[i][j][k].rgb[l] = rand() % 256;
-
-                // Compara população de pixels com o pixel correspondente na matriz alvo
-                evaluateFitness(&world[i][j][k], target[i][j]);
-
-                // Gravando a população inicial aleatória para exibir no vídeo
-                best[i][j] = world[i][j][0];
-            }
-        }
-    }   
+    initialize_world(world, best, target, width, height); 
 
     // Escrevendo a imagem aleatória
     FILE *file = fopen("individuals/file0.txt", "w");
@@ -108,7 +73,9 @@ int main(int argc, char *argv[]) {
     Individual child;
     
     for (int generation = 0; generation < MAX_GENERATIONS; generation++) {
+
         printf("Gen %d\n", generation);
+
         // Vamos percorrer toda a imagem 
         for (int i = 0; i < width; i++){
             for (int j = 0; j < height; j++){
@@ -163,14 +130,14 @@ int main(int argc, char *argv[]) {
         fclose(file);
     }
     
-    // Fim do Algoritmo Genético, exibindo o resultado
+    // Fim do Algoritmo Genético
 
     // Calculando o tempo decorrido em todo o processo
     fim = clock() - ini;
     printf("Time ellapsed: %.2f seconds\n", (float)fim/CLOCKS_PER_SEC);
     //printf("Best Fitness: ");
 
-    //* Liberando a memória de todas as alocações *//
+    // Liberando a memória de todas as alocações
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
             free(target[i][j]);
