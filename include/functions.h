@@ -18,44 +18,53 @@ typedef struct _individual{
 } Individual;
 
 /*--------------- Funções de criação, desalocação e inicialização ------------*/
-//Alocação
-int ***create_target(int width, int height); // Função que cria o indivíduo perfeito alvo
-Individual ***create_world(int width, int height); // Função que cria o mundo
-Individual **create_best(int width, int height); // Função que cria a matriz de melhores indivíduos
 
-//Desalocação
+// -> Alocação de memória
+
+// Função que cria o indivíduo perfeito alvo
+int ***create_target(int width, int height); 
+
+// Função que cria o mundo
+Individual ***create_world(int width, int height); 
+
+// Função que cria a matriz de melhores indivíduos
+Individual **create_best(int width, int height); 
+
+// -> Desalocação de memória
+
 void destroy_world(Individual**** world_ref, int width, int height);
 void destroy_target(int**** target_ref, int width, int height);
 void destroy_best(Individual*** best_ref, int width);
 
-//Inicialização
-void initialize_world(Individual ***world, Individual **best, int ***target, int width, int height); // Função que incializa o mundo com valores aleatórios
+// -> Inicialização
+
+// Função que incializa o mundo com valores aleatórios
+void initialize_world(Individual ***world, Individual **best, int ***target, int width, int height); 
 
 /*---------------- Funções relacionadas a arquivos ---------------*/
-void read_target(int ***target, FILE *src, int width, int height); // Função que lê a matriz alvo a partir de um arquivo txt
 
+// Função que lê a matriz alvo a partir de um arquivo de texto
+void read_target(int ***target, FILE *src, int width, int height); 
 
-/*---------------- Funções relacionadas à evolução em si -------------*/
-void evolution(Individual ***world, int ***target, Individual **best, int width, int height, char *filename, char *fitness_file); //Engloba o processo evolutivo em si
+// Função que escreve os dados da matriz em um arquivo
+void write_ind_matrix(FILE *file, Individual **matrix, int width, int height, int depth);
 
-// Função que percorre o mundo e encontra os melhores
-void find_best(Individual **best, Individual ***world, int width, int height);
+/*---------------- Funções relacionadas à Evolução -------------*/
 
-// Função para avaliar a aptidão de um indivíduo
-void evaluateFitness(Individual *individual, const int target[3]);
-
-// Função para realizar cruzamento por média entre dois indivíduos
+// Função para realizar cruzamento entre dois indivíduos
 void crossover(const Individual *parent1, const Individual *parent2, Individual *child);
 
 // Função para aplicar mutação a um indivíduo
 void mutate(Individual *individual);
 
-// Função que calcula a média dos Fitness da matriz best
-int fitness_mean(Individual **best, int width, int height);
+// Função para avaliar a aptidão de um indivíduo
+void evaluateFitness(Individual *individual, const int target[3]);
 
-/*----------------- Funções auxiliares ----------*/
-// Função que escreve os dados da matriz em um arquivo
-void write_ind_matrix(FILE *file, Individual **matrix, int width, int height, int depth);
+// Função que percorre o mundo e encontra os melhores
+void find_best(Individual **best, Individual ***world, int width, int height);
+
+// Função que calcula a média das aptidões da matriz best
+int fitness_mean(Individual **best, int width, int height);
 
 
 #endif

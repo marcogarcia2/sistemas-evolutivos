@@ -1,6 +1,10 @@
 #include "functions.h"
+
 /*--------------- Funções de criação, desalocação e inicialização ------------*/
-//Alocação
+
+// -> Alocação
+
+// Função que cria o indivíduo perfeito alvo
 int ***create_target(int width, int height){
 
     int ***matrix = (int***)malloc(width * sizeof(int**));
@@ -15,6 +19,7 @@ int ***create_target(int width, int height){
     return matrix;
 }
 
+// Função que cria o mundo
 Individual ***create_world(int width, int height){
     
     Individual ***matrix = (Individual***)malloc(width * sizeof(Individual**));
@@ -29,6 +34,7 @@ Individual ***create_world(int width, int height){
     return matrix;
 }
 
+// Função que cria a matriz de melhores indivíduos
 Individual **create_best(int width, int height){
         
     Individual **matrix = (Individual**)malloc(width * sizeof(Individual*));
@@ -40,7 +46,8 @@ Individual **create_best(int width, int height){
     return matrix;
 }
 
-//Desalocação
+// -> Desalocação de memória
+
 void destroy_world(Individual**** world_ref, int width, int height){
     Individual ***world = *world_ref;
 
@@ -80,7 +87,9 @@ void destroy_best(Individual*** best_ref, int width){
     best_ref = NULL;
 }
 
-//Inicialização
+// -> Inicialização
+
+// Função que incializa o mundo com valores aleatórios
 void initialize_world(Individual ***world, Individual **best, int ***target, int width, int height){
 
      for (int i = 0; i < width; i++){
@@ -102,6 +111,8 @@ void initialize_world(Individual ***world, Individual **best, int ***target, int
 }
 
 /*---------------- Funções relacionadas a arquivos ---------------*/
+
+// Função que lê a matriz alvo a partir de um arquivo de texto
 void read_target(int ***target, FILE *src, int width, int height){
     int a = 0, b = 0; // Lê primeiro da esquerda para a direita, depois de cima para baixo
 
@@ -115,33 +126,19 @@ void read_target(int ***target, FILE *src, int width, int height){
         }
 }
 
-/*---------------- Funções relacionadas à evolução em si -------------*/
-// Função que percorre o mundo e encontra os melhores
-void find_best(Individual **best, Individual ***world, int width, int height){ 
-    Individual bestOne;
-    for (int i = 0; i < width; i++){
-        for (int j = 0; j < height; j++){
-            bestOne = world[i][j][0];
-            for (int k = 1; k < POP_SIZE; k++){
-
-                // Se o fitness desse indivíduo for menor que o do melhor até então, ele é o novo melhor
-                if (bestOne.totalFitness > world[i][j][k].totalFitness)
-                    bestOne = world[i][j][k];
-                
+// Função que escreve os dados da matriz em um arquivo
+void write_ind_matrix(FILE *file, Individual **matrix, int width, int height, int depth){ // Função que escreve os dados da matriz em um arquivo
+    for (int i = 0; i < width; i++) {
+        for (int j = 0; j < height; j++) {
+            for (int k = 0; k < depth; k++) {
+                fprintf(file, "%d ", matrix[i][j].rgb[k]);
             }
-            best[i][j] = bestOne;
+            fprintf(file, "\n");
         }
     }
 }
 
-// Função para avaliar a aptidão de um indivíduo
-void evaluateFitness(Individual *individual, const int target[3]) { 
-    individual->totalFitness = 0;
-    for (int i = 0; i < 3; i++){
-        individual->fitness[i] = abs(individual->rgb[i] - target[i]);
-        individual->totalFitness += individual->fitness[i];
-    }
-}
+/*---------------- Funções relacionadas à Evolução -------------*/
 
 // Função para realizar cruzamento por média entre dois indivíduos
 void crossover(const Individual *parent1, const Individual *parent2, Individual *child) { 
@@ -160,6 +157,33 @@ void mutate(Individual *individual) {
     }
 }
 
+// Função para avaliar a aptidão de um indivíduo
+void evaluateFitness(Individual *individual, const int target[3]) { 
+    individual->totalFitness = 0;
+    for (int i = 0; i < 3; i++){
+        individual->fitness[i] = abs(individual->rgb[i] - target[i]);
+        individual->totalFitness += individual->fitness[i];
+    }
+}
+
+// Função que percorre o mundo e encontra os melhores
+void find_best(Individual **best, Individual ***world, int width, int height){ 
+    Individual bestOne;
+    for (int i = 0; i < width; i++){
+        for (int j = 0; j < height; j++){
+            bestOne = world[i][j][0];
+            for (int k = 1; k < POP_SIZE; k++){
+
+                // Se o fitness desse indivíduo for menor que o do melhor até então, ele é o novo melhor
+                if (bestOne.totalFitness > world[i][j][k].totalFitness)
+                    bestOne = world[i][j][k];
+                
+            }
+            best[i][j] = bestOne;
+        }
+    }
+}
+
 // Função que calcula a média dos Fitness da matriz best
 int fitness_mean(Individual **best, int width, int height){
     int mean = 0;
@@ -172,14 +196,5 @@ int fitness_mean(Individual **best, int width, int height){
 }
 
 /*----------------- Funções auxiliares ----------*/
-void write_ind_matrix(FILE *file, Individual **matrix, int width, int height, int depth){ // Função que escreve os dados da matriz em um arquivo
-    for (int i = 0; i < width; i++) {
-        for (int j = 0; j < height; j++) {
-            for (int k = 0; k < depth; k++) {
-                fprintf(file, "%d ", matrix[i][j].rgb[k]);
-            }
-            fprintf(file, "\n");
-        }
-    }
-}
+
 
