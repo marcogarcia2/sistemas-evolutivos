@@ -23,7 +23,7 @@ run:
 	python3 $(APPS)/show.py	
 
 clean:
-	rm ./individuals/file* ./individuals/target* fitness.txt ./pics/pic* Evolution.mp4
+	rm ./individuals/file* ./individuals/target* fitness.txt ./pics/pic* ./bin/* ./obj/* Evolution.mp4
 
 commit:
 	make clean
