@@ -10,8 +10,8 @@ O projeto consiste na geração de imagens que evoluem a partir dos conceitos de
 É importante que todas as imagens utilizadas sejam do formato JPEG. O projeto utiliza ```C``` para a implementação do algoritmo genético, e ```Python``` para confeccionar o vídeo final, através das bibliotecas Pillow e OpenCV. Por isso é necessário ter essas duas linguagens instaladas no computador, além das duas bibliotecas de Python para rodar o programa.
 
 ```
-pip install pillow
-pip install opencv-python
+$ sudo pip install pillow
+$ sudo pip install opencv-python
 ```
 
 ## Como executar o projeto

@@ -3,18 +3,21 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 #include <time.h>
 #include <math.h>
 
-#define POP_SIZE 4
-#define MAX_GENERATIONS 50
-#define MUTATION_RATE 10 // escolher entre 0 e 100
+#define POP_SIZE 10
+#define MAX_GENERATIONS 100
+#define MUTATION_RATE 1.0 // escolher entre 0 e 1, entenda como porcentagem
+#define MUTATION_SCALE 15 // escolher entre 0 e 255, entenda como incremento no valor da cor caso haja mutação
 
 // Estrutura para representar um indivíduo
 typedef struct _individual{
     int rgb[3];                    // Vetor que guarda os valores RGB
     int fitness[3];                // Valores de aptidão, quanto menores melhor
     int totalFitness;              // Soma das aptidões de cana canal de cor
+    int location;
 } Individual;
 
 /*--------------- Funções de criação, desalocação e inicialização ------------*/
@@ -58,13 +61,26 @@ void crossover(const Individual *parent1, const Individual *parent2, Individual 
 void mutate(Individual *individual);
 
 // Função para avaliar a aptidão de um indivíduo
-void evaluateFitness(Individual *individual, const int target[3]);
+void evaluate_fitness(Individual *individual, const int target[3]);
+
+// Função que percorre a população e retorna a localização do melhor indivíduo
+int search_best(const Individual *population);
 
 // Função que percorre o mundo e encontra os melhores
-void find_best(Individual **best, Individual ***world, int width, int height);
+void first_find_best(Individual **best, Individual ***world, int width, int height);
 
 // Função que calcula a média das aptidões da matriz best
 int fitness_mean(Individual **best, int width, int height);
 
+/*---------------- Funções Auxiliares -------------*/
+
+// Função que gera um inteiro aleatório entre os números dados
+int _random(int min, int max);
+
+// Quick Sort
+void quickSort(Individual *population, int low, int high);
+
+// Função que causa um genocídio
+void genocide(Individual ***world, int width, int height);
 
 #endif

@@ -5,8 +5,23 @@
     de cada pixel da nossa imagem alvo. 
 */
 
+void imprimeChild(const Individual child, int target[3]){
+    puts("-----------------------------");
+    printf("Target: %d %d %d\n", target[0], target[1], target[2]);
+    printf("Best: %d %d %d\n", child.rgb[0], child.rgb[1], child.rgb[2]);
+    printf("totalFitness: %d\n", child.totalFitness);
+}
+
+void imprimePopulacao(const Individual *pop){
+    printf("População do pixel [0][0]:\n");
+    for (int i = 0; i < POP_SIZE; i++){
+        printf("Indivíduo %d: %d %d %d\n", i, pop[i].rgb[0], pop[i].rgb[1], pop[i].rgb[2]);
+    }
+}
+
 int main(int argc, char *argv[]) {
 
+    // Definindo algumas variáveis
     srand(time(NULL));
     clock_t fim, ini = clock();
     char filename[25];    
@@ -54,7 +69,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Percorrendo world para determinar os melhores
-    find_best(best, world, width, height);
+    first_find_best(best, world, width, height);
 
     // Escrevendo o fitness médio da geração 0
     fprintf(fitness_file, "%d,", fitness_mean(best, width, height));
@@ -63,47 +78,43 @@ int main(int argc, char *argv[]) {
 
     //* Algoritmo Genético *//
     
+    int parent1index, parent2index;
     Individual child;
     
     for (int generation = 0; generation < MAX_GENERATIONS; generation++) {
 
         printf("Gen %d\n", generation+1);
+        
+        // Matando os piores indivíduos
+        genocide(world, width, height);
 
         // Vamos percorrer toda a imagem 
         for (int i = 0; i < width; i++){
             for (int j = 0; j < height; j++){
 
+                
                 // Sobre cada pixel, vamos iterar sobre a população
-                for (int k = 0; k < POP_SIZE/2; k++){
-                    
-                    // world[i][j][k] é o indivíduo da iteração atual
-                    int parent1index = 2 * k;
-                    int parent2index = 2 * k + 1;
+                for (int k = POP_SIZE/2; k < POP_SIZE; k++){
+
+                    // Vamos escolher dois pais aleatórios
+                    parent1index = rand() % POP_SIZE/2;
+                    parent2index = rand() % POP_SIZE/2;
+                    while (parent1index == parent2index)
+                        parent2index = rand() % POP_SIZE/2;
+
+                    // Agora que temos pais diferentes, vamos gerar a criança
                     crossover(&world[i][j][parent1index], &world[i][j][parent2index], &child);
                     mutate(&child);
-                    evaluateFitness(&child, target[i][j]);
-                }
+                    evaluate_fitness(&child, target[i][j]);
 
-                // Agora que temos a criança, vamos substitir o pior indivíduo
-                
-                // Esta variável irá guardar a localização do pior indivíduo na População
-                int location = 0;
+                    // Agora que temos a criança, vamos inserí-la na população
+                    world[i][j][k] = child;
 
-                // Loopando sobre a população
-                int aux = world[i][j][0].totalFitness;
-                for (int k = 1; k < POP_SIZE; k++){
-                    if (aux < world[i][j][k].totalFitness){
-                        aux = world[i][j][k].totalFitness;
-                        location = k;
+                    // A criança pode ser melhor que o melhor indivíduo da geração
+                    if (child.totalFitness < best[i][j].totalFitness){
+                        best[i][j] = child;
                     }
                 }
-
-                // Substituindo o pior indivíduo pela criança
-                world[i][j][location] = child;
-
-                // A criança pode ser melhor que o melhor indivíduo da geração
-                if (child.totalFitness < best[i][j].totalFitness)
-                    best[i][j] = child;
             }
         }
 

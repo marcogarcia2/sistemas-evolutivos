@@ -1,5 +1,16 @@
 #include "functions.h"
 
+/*----------------- Definição da estrutura do Indivíduo ----------------------*/
+
+// Estrutura para representar um indivíduo
+// typedef struct _individual{
+//     int rgb[3];                    // Vetor que guarda os valores RGB
+//     int fitness[3];                // Valores de aptidão, quanto menores melhor
+//     int totalFitness;              // Soma das aptidões de cana canal de cor
+//     int location;
+// } Individual;
+
+
 /*--------------- Funções de criação, desalocação e inicialização ------------*/
 
 // -> Alocação
@@ -101,7 +112,10 @@ void initialize_world(Individual ***world, Individual **best, int ***target, int
                     world[i][j][k].rgb[l] = rand() % 256;
 
                 // Compara população de pixels com o pixel correspondente na matriz alvo
-                evaluateFitness(&world[i][j][k], target[i][j]);
+                evaluate_fitness(&world[i][j][k], target[i][j]);
+
+                // Guardando a sua localização na população
+                world[i][j][k].location = k;
 
                 // Gravando a população inicial aleatória para exibir no vídeo
                 best[i][j] = world[i][j][0];
@@ -143,22 +157,37 @@ void write_ind_matrix(FILE *file, Individual **matrix, int width, int height, in
 // Função para realizar cruzamento por média entre dois indivíduos
 void crossover(const Individual *parent1, const Individual *parent2, Individual *child) { 
     for (int i = 0; i < 3; i++){
-        child->rgb[i] = (parent1->rgb[i] + parent2->rgb[i]) / 2;
+
+        int random = rand() % 2;
+        
+        if (random == 0) child->rgb[i] = parent1->rgb[i];
+        else child->rgb[i] = parent2->rgb[i];
     }
 }
 
 // Função para aplicar mutação a um indivíduo
 void mutate(Individual *individual) { 
-    for (int c = 0; c < 3; c++){
-        int chance = rand() % 100 + 1;
-        if (chance <= MUTATION_RATE){
-            individual->rgb[c] = rand() % 256; 
-        }   
-    }
+        
+    int chance = (rand() % 100) + 1;
+    //printf("chance = %d || M = %d\n", chance, (int)MUTATION_RATE*100);
+    if (chance <= (unsigned int) (MUTATION_RATE*100)){
+
+        // Mutação acontecerá em R, G ou B?
+        // Para mais ou para menos?
+        int x = (chance % 2 == 0) ? 1 : -1;
+
+        for (int i = 0; i < 3; i++){
+
+            individual->rgb[i] += MUTATION_SCALE * x; 
+
+            if (individual->rgb[i] > 255) individual->rgb[i] = 255;
+            else if (individual->rgb[i] < 0) individual->rgb[i] = 0;
+        }
+    }   
 }
 
 // Função para avaliar a aptidão de um indivíduo
-void evaluateFitness(Individual *individual, const int target[3]) { 
+void evaluate_fitness(Individual *individual, const int target[3]) { 
     individual->totalFitness = 0;
     for (int i = 0; i < 3; i++){
         individual->fitness[i] = abs(individual->rgb[i] - target[i]);
@@ -166,8 +195,26 @@ void evaluateFitness(Individual *individual, const int target[3]) {
     }
 }
 
-// Função que percorre o mundo e encontra os melhores
-void find_best(Individual **best, Individual ***world, int width, int height){ 
+// Função que percorre a população e retorna a localização do melhor indivíduo
+int search_best(const Individual *population){
+
+    int aux = population[0].totalFitness;
+    int location = 0;
+
+    for (int i = 1; i < POP_SIZE; i++){
+        
+        if(aux > population[i].totalFitness){
+            aux = population[i].totalFitness;
+            location = i;
+        }
+
+    }
+
+    return location;
+}
+
+// Função que percorre o mundo e encontra os melhores inicialmente
+void first_find_best(Individual **best, Individual ***world, int width, int height){ 
     Individual bestOne;
     for (int i = 0; i < width; i++){
         for (int j = 0; j < height; j++){
@@ -194,7 +241,90 @@ int fitness_mean(Individual **best, int width, int height){
     }
     return mean / (width * height);
 }
+/*---------------- Funções Auxiliares -------------*/
 
-/*----------------- Funções auxiliares ----------*/
+// Função que gera um inteiro aleatório entre os números dados
+int _random(int min, int max){
+    return (rand() % (max - min + 1)) + min;
+}
 
+// function to swap elements
+void swap(Individual *a, Individual *b) {
+    Individual t = *a;
+    *a = *b;
+    *b = t;
+}
 
+// function to find the partition position
+int partition(Individual *population, int low, int high) {
+
+// select the rightmost element as pivot
+Individual pivot = population[high];
+
+    // pointer for greater element
+    int i = (low - 1);
+
+    // traverse each element of the array
+    // compare them with the pivot
+    for (int j = low; j < high; j++) {
+        if (population[j].totalFitness <= pivot.totalFitness) {
+            
+            // if element smaller than pivot is found
+            // swap it with the greater element pointed by i
+            i++;
+            
+            // swap element at i with element at j
+            swap(&population[i], &population[j]);
+        }
+    }
+
+    // swap the pivot element with the greater element at i
+    swap(&population[i + 1], &population[high]);
+
+    // return the partition point
+    return (i + 1);
+}
+
+void quickSort(Individual *population, int low, int high) {
+    if (low < high) {
+    
+        // find the pivot element such that
+        // elements smaller than pivot are on left of pivot
+        // elements greater than pivot are on right of pivot
+        int pi = partition(population, low, high);
+        
+        // recursive call on the left of pivot
+        quickSort(population, low, pi - 1);
+        
+        // recursive call on the right of pivot
+        quickSort(population, pi + 1, high);
+    }
+}
+
+void kill(Individual *individual){
+
+    // Setando valores inválidos para o indivíduo
+    for (int i = 0; i < 3; i++){
+        individual->rgb[i] = -1;
+        individual->fitness[i] = -1;
+    }
+    individual->totalFitness = INT_MAX;
+}
+
+// Função que causa um genocídio
+void genocide(Individual ***world, int width, int height){
+
+    for (int i = 0; i < width; i++){
+        for (int j = 0; j < height; j++){
+            
+            // Ordenando a população do melhor para o pior
+            quickSort(world[i][j], 0, POP_SIZE - 1);
+
+            // Iremos matar metade da população
+            for (int k = POP_SIZE/2; k < POP_SIZE; k++){
+
+                kill(&world[i][j][k]);
+            }
+        }
+    }
+}
