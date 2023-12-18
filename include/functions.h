@@ -9,7 +9,7 @@
 
 #define POP_SIZE 10
 #define MAX_GENERATIONS 100
-#define MUTATION_RATE 1.0 // escolher entre 0 e 1, entenda como porcentagem
+#define MUTATION_RATE 0.2 // escolher entre 0 e 1, entenda como porcentagem
 #define MUTATION_SCALE 15 // escolher entre 0 e 255, entenda como incremento no valor da cor caso haja mutação
 
 // Estrutura para representar um indivíduo
