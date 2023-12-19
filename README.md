@@ -72,7 +72,7 @@ Para limpar todos os arquivos desta execução, digite no terminal:
 $ make clean
 ```
 
-É uma boa prática sempre limpar os arquivos antes de rodar o programa novamente. 
+É sempre uma boa prática limpar os arquivos antes de rodar o programa novamente. 
 
 No arquivo ```graph.ipynb```, é possível visualizar o plot da média do fitness da melhor população de cada geração. Basta clicar em ```"Run All"```, e um gráfico será plotado automaticamente. Nele é possível perceber que o fitness diminui com o tempo, o que é condizente com a definição adotada no projeto de que quanto menor o valor do fitness melhor é o indivíduo.
 
