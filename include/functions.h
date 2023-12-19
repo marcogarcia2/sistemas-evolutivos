@@ -7,17 +7,15 @@
 #include <time.h>
 #include <math.h>
 
-#define POP_SIZE 10
-#define MAX_GENERATIONS 100
-#define MUTATION_RATE 0.2 // escolher entre 0 e 1, entenda como porcentagem
-#define MUTATION_SCALE 15 // escolher entre 0 e 255, entenda como incremento no valor da cor caso haja mutação
+#define POP_SIZE 6
+#define MAX_GENERATIONS 30
+#define MUTATION_RATE 0.70 // escolher entre 0 e 1, entenda como porcentagem
+#define MUTATION_SCALE 25 // escolher entre 0 e 255, entenda como incremento no valor da cor caso haja mutação
 
 // Estrutura para representar um indivíduo
 typedef struct _individual{
     int rgb[3];                    // Vetor que guarda os valores RGB
-    int fitness[3];                // Valores de aptidão, quanto menores melhor
     int totalFitness;              // Soma das aptidões de cana canal de cor
-    int location;
 } Individual;
 
 /*--------------- Funções de criação, desalocação e inicialização ------------*/
@@ -82,5 +80,8 @@ void quickSort(Individual *population, int low, int high);
 
 // Função que causa um genocídio
 void genocide(Individual ***world, int width, int height);
+
+// Função que imprime a geração atual
+void print_generation(int generation);
 
 #endif

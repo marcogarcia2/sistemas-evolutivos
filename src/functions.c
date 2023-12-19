@@ -5,9 +5,7 @@
 // Estrutura para representar um indivíduo
 // typedef struct _individual{
 //     int rgb[3];                    // Vetor que guarda os valores RGB
-//     int fitness[3];                // Valores de aptidão, quanto menores melhor
 //     int totalFitness;              // Soma das aptidões de cana canal de cor
-//     int location;
 // } Individual;
 
 
@@ -107,15 +105,12 @@ void initialize_world(Individual ***world, Individual **best, int ***target, int
         for (int j = 0; j < height; j++){
             for (int k = 0; k < POP_SIZE; k++){
 
+                // Gera valores aleatórios para cada canal de cor
                 for (int l = 0; l < 3; l++) 
-                    // Gera valores aleatórios para cada canal de cor
                     world[i][j][k].rgb[l] = rand() % 256;
 
                 // Compara população de pixels com o pixel correspondente na matriz alvo
                 evaluate_fitness(&world[i][j][k], target[i][j]);
-
-                // Guardando a sua localização na população
-                world[i][j][k].location = k;
 
                 // Gravando a população inicial aleatória para exibir no vídeo
                 best[i][j] = world[i][j][0];
@@ -190,8 +185,8 @@ void mutate(Individual *individual) {
 void evaluate_fitness(Individual *individual, const int target[3]) { 
     individual->totalFitness = 0;
     for (int i = 0; i < 3; i++){
-        individual->fitness[i] = abs(individual->rgb[i] - target[i]);
-        individual->totalFitness += individual->fitness[i];
+
+        individual->totalFitness += abs(individual->rgb[i] - target[i]);
     }
 }
 
@@ -306,7 +301,6 @@ void kill(Individual *individual){
     // Setando valores inválidos para o indivíduo
     for (int i = 0; i < 3; i++){
         individual->rgb[i] = -1;
-        individual->fitness[i] = -1;
     }
     individual->totalFitness = INT_MAX;
 }
@@ -327,4 +321,19 @@ void genocide(Individual ***world, int width, int height){
             }
         }
     }
+}
+
+// Função que imprime a geração atual
+void print_generation(int generation) {
+    if (generation == 1) {
+        printf("Generation: ");
+    } else {
+        if (generation <= 10) printf("\b");
+        else if (generation <= 100) printf("\b\b");
+        else if (generation <= 1000) printf("\b\b\b");
+    }
+
+    printf("%d", generation);
+    fflush(stdout); // Força a saída imediata para garantir que seja exibido na tela
+    if(generation == MAX_GENERATIONS) printf("\n");
 }

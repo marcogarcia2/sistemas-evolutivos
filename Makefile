@@ -3,7 +3,7 @@ BIN = ./bin
 INCLUDE = ./include
 OBJ = ./obj
 SRC = ./src
-FLAGS = -Wall -Werror -Wpedantic -O3 -march=native #-fsanitize=address 
+FLAGS = -Wall -Werror -Wpedantic #-O3 -march=native #-fsanitize=address 
 
 all: libed myapps
 
@@ -13,10 +13,10 @@ libed:
 myapps:
 	@gcc $(FLAGS) $(APPS)/main.c $(OBJ)/*.o -I $(INCLUDE) -o $(BIN)/main
 
-func1: 
+1: libed myapps
 	@python3 $(APPS)/generator.py
 
-func2: 
+2: libed myapps
 	@python3 $(APPS)/generator2.py
 
 run: 
@@ -29,7 +29,7 @@ clean:
 commit:
 	make clean
 	git add .
-	git commit -m "Ajustes finais"
+	git commit -m "Quick Commit"
 	git push origin main
 
 debug: clean all func1 run

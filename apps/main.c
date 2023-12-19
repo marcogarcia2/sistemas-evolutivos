@@ -5,20 +5,6 @@
     de cada pixel da nossa imagem alvo. 
 */
 
-void imprimeChild(const Individual child, int target[3]){
-    puts("-----------------------------");
-    printf("Target: %d %d %d\n", target[0], target[1], target[2]);
-    printf("Best: %d %d %d\n", child.rgb[0], child.rgb[1], child.rgb[2]);
-    printf("totalFitness: %d\n", child.totalFitness);
-}
-
-void imprimePopulacao(const Individual *pop){
-    printf("População do pixel [0][0]:\n");
-    for (int i = 0; i < POP_SIZE; i++){
-        printf("Indivíduo %d: %d %d %d\n", i, pop[i].rgb[0], pop[i].rgb[1], pop[i].rgb[2]);
-    }
-}
-
 int main(int argc, char *argv[]) {
 
     // Definindo algumas variáveis
@@ -35,8 +21,7 @@ int main(int argc, char *argv[]) {
 
     // Lendo do cabeçalho as dimensões da imagem
     int width, height;
-    if (fscanf(src, "%d %d\n", &width, &height) != 2) //Feito isso pelo fato de warnings estarem sendo tratados como erros
-        printf("Debug");
+    fscanf(src, "%d %d\n", &width, &height);
 
     // Criando as matrizes para guardar os dados
     int ***target = create_target(width, height); //Matriz que representa a img, onde cada índice/pixel é um int[3] (RGB)
@@ -78,12 +63,14 @@ int main(int argc, char *argv[]) {
 
     //* Algoritmo Genético *//
     
+    // Variáveis auxiliares
     int parent1index, parent2index;
     Individual child;
     
-    for (int generation = 0; generation < MAX_GENERATIONS; generation++) {
+    for (int generation = 1; generation <= MAX_GENERATIONS; generation++) {
 
-        printf("Gen %d\n", generation+1);
+        // Imprimindo a geração atual
+        print_generation(generation);
         
         // Matando os piores indivíduos
         genocide(world, width, height);
@@ -93,10 +80,10 @@ int main(int argc, char *argv[]) {
             for (int j = 0; j < height; j++){
 
                 
-                // Sobre cada pixel, vamos iterar sobre a população
+                // Vamos iterar sobre cada lugar vazio da população
                 for (int k = POP_SIZE/2; k < POP_SIZE; k++){
 
-                    // Vamos escolher dois pais aleatórios
+                    // Vamos escolher dois pais aleatórios e diferentes entre si
                     parent1index = rand() % POP_SIZE/2;
                     parent2index = rand() % POP_SIZE/2;
                     while (parent1index == parent2index)
@@ -119,7 +106,7 @@ int main(int argc, char *argv[]) {
         }
 
         // Ao final da geração, salvo a matriz dos melhores indivíduos em um arquivo
-        snprintf(filename, sizeof(filename), "individuals/file%d.txt", generation + 1);
+        snprintf(filename, sizeof(filename), "individuals/file%d.txt", generation);
         FILE *file = fopen(filename, "w"); 
         if (file == NULL){
             printf("Error while creating file %s\n", filename);
