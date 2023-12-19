@@ -5,16 +5,11 @@
 
 O projeto consiste na geração de imagens que evoluem a partir dos conceitos de Algoritmos Genéticos aprendidos em sala de aula. O projeto pode evoluir uma imagem do zero para uma imagem escolhida, ou fazer a mescla de duas imagens a escolha do usuário.
 
-<div style="text-align:center">
-  <figure style="display:inline-block">
-    <img src="apresentacao/lion.jpeg" alt="" style="width:300px;height:300px;margin-right:10px">
-    <figcaption></figcaption>
-  </figure>
-  <figure style="display:inline-block">
-    <img src="apresentacao/leaocolorido.gif" alt="" style="width:300px;height:300px">
-    <figcaption></figcaption>
-  </figure>
-</div>
+<p align="center">
+  <img src="apresentacao/lion.jpeg" alt="Imagem1" width="300px" height="300px" style="margin-right: 10px">
+  <img src="apresentacao/leaocolorido.gif" alt="Imagem2" width="300px" height="300px">
+</p>
+
 <figcaption style="text-align:center">
   <b>Parâmetros:</b><br>
   POP_SIZE: 8<br>
