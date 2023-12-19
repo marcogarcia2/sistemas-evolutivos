@@ -162,7 +162,8 @@ void crossover(const Individual *parent1, const Individual *parent2, Individual 
 
 // Função para aplicar mutação a um indivíduo
 void mutate(Individual *individual) { 
-        
+    
+    int mutation = 0;
     int chance = (rand() % 100) + 1;
     //printf("chance = %d || M = %d\n", chance, (int)MUTATION_RATE*100);
     if (chance <= (unsigned int) (MUTATION_RATE*100)){
@@ -172,8 +173,8 @@ void mutate(Individual *individual) {
         int x = (chance % 2 == 0) ? 1 : -1;
 
         for (int i = 0; i < 3; i++){
-
-            individual->rgb[i] += MUTATION_SCALE * x; 
+            mutation = rand() % MUTATION_SCALE + 1;
+            individual->rgb[i] += mutation * x; 
 
             if (individual->rgb[i] > 255) individual->rgb[i] = 255;
             else if (individual->rgb[i] < 0) individual->rgb[i] = 0;
