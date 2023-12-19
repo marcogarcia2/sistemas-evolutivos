@@ -10,14 +10,12 @@ O projeto consiste na geração de imagens que evoluem a partir dos conceitos de
   <img src="apresentacao/leaocolorido.gif" alt="Imagem2" width="300px" height="300px">
 </p>
 
-<p align="center"; style="text-align: center;">
-  <figcaption>
-    <b>Parâmetros:</b><br>
-    POP_SIZE: 8<br>
-    MAX_GENERATIONS: 20<br>
-    MUTATION_RATE: 0.50<br>
-    MUTATION_SCALE: 15
-  </figcaption>
+<p align="center">
+  <b>Parâmetros:</b><br>
+  POP_SIZE: 8<br>
+  MAX_GENERATIONS: 20<br>
+  MUTATION_RATE: 0.50<br>
+  MUTATION_SCALE: 15
 </p>
 
 
