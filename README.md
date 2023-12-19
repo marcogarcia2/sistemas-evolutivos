@@ -36,24 +36,29 @@ $ sudo pip install pillow
 $ sudo pip install opencv-python
 ```
 
-## :gear: Como executar o projeto
-**ANTES DE TUDO**, se não existir, crie uma pasta chamada ```obj```, ela é fundamental para que o programa execute corretamente. 
+Além disso, é **OPCIONAL** instalar as bibliotecas Numpy e Matplotlib, para visualizar o gráfico que exibe o fitness médio de cada geração.
+```
+$ sudo pip install numpy
+$ sudo pip install matplotlib
+```
 
-Coloque uma imagem JPEG à sua escolha no diretório raiz do projeto. Renomeie o arquivo para ```1.jpeg```, para que o programa abra corretamente a imagem. Se você deseja mesclar duas imagens, coloque outra imagem de sua escolha e a renomeie para ```2.jpeg```. É importante que estas duas imagens tenham **AS MESMAS DIMENSÕES**.
+## :gear: Executando o programa
 
-Primeiramente, escolha uma das funcionalidades. Se você deseja evoluir apenas uma imagem, coloque-a no diretório raiz do projeto e renomeie-a para "1.jpeg", e então digite:
+**PRIMEIRAMENTE** coloque uma imagem JPEG à sua escolha no diretório raiz do projeto. Renomeie o arquivo para ```1.jpeg```, para que o programa abra corretamente a imagem. Se você deseja mesclar duas imagens, coloque outra imagem de sua escolha e a renomeie para ```2.jpeg```. É importante que estas duas imagens tenham **AS MESMAS DIMENSÕES**.
+
+Abra o terminal para executar o programa. Se você escolheu apenas uma imagem, digite:
 
 ```
 $ make 1
 ```
 
-Se você deseja realizar a fusão de duas imagens, coloque ambas no diretório raiz e renomeie-as com "1.jpeg" e "2.jpeg". Após isso, digite no terminal:
+Alternativamente, se você deseja realizar a fusão de duas imagens, digite no terminal:
 
 ```
 $ make 2
 ```
 
-Isto irá compilar o código em C e gerar o arquivo alvo, caso realmente existam as imagens na raiz. Então, para finalmente rodar o programa e iniciar a evolução, digite:
+Estes comandos irão compilar o código em C e gerar o arquivo alvo, caso realmente existam as imagens na raiz. Então, para finalmente rodar o programa e iniciar a evolução, digite:
 
 ```
 $ make run
@@ -69,15 +74,15 @@ $ make clean
 
 É uma boa prática sempre limpar os arquivos antes de rodar o programa novamente. 
 
-No arquivo ```"graph.ipynb"```, é possível visualizar o plot da média do fitness da melhor população de cada geração. Basta clicar em ```"Run All"```, e um gráfico será plotado automaticamente. Nele é possível perceber que o fitness diminui com o tempo, o que é condizente com a definição adotada no projeto, que é quanto menor o fitness melhor.
+No arquivo ```graph.ipynb```, é possível visualizar o plot da média do fitness da melhor população de cada geração. Basta clicar em ```"Run All"```, e um gráfico será plotado automaticamente. Nele é possível perceber que o fitness diminui com o tempo, o que é condizente com a definição adotada no projeto de que quanto menor o valor do fitness melhor é o indivíduo.
 
 <p align="center">
   <img src="photos/srcimgs/fitplot.png" alt="Imagem1" width="571px" height="455px">
 </p>
 
-## :hammer: Customizando as constantes
+## :hammer_and_wrench: Customizando as constantes
 
-No arquivo ```"include/functions.h"```, existem quatro constantes definidas, fundamentais para o funcionamento do algoritmo genético. A fim de testar diferentes combinações, o usuário pode alterá-las da seguinte forma:
+No arquivo ```include/functions.h```, existem quatro constantes definidas, fundamentais para o funcionamento do algoritmo genético. A fim de testar diferentes combinações, o usuário pode alterá-las da seguinte forma:
 
 - **\#define MAX_GENERATIONS**
 Este é o número de total de gerações, e define quantas rodadas de evolução acontecerão. Quanto maior o número de gerações, melhor será a geração final, entretanto, mais tempo será necessário para gerar o vídeo.
@@ -179,3 +184,5 @@ ___
 </p>
 
 ___
+
+***OBS: na pasta ```photos``` existem algumas imagens que você pode usar para testar programa!***

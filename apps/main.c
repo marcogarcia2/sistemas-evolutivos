@@ -7,6 +7,11 @@
 
 int main(int argc, char *argv[]) {
 
+    if (POP_SIZE == 1){
+        printf("POP_SIZE must be greater than 1.\n");
+        return 1;
+    }
+
     // Definindo algumas variáveis
     srand(time(NULL));
     clock_t fim, ini = clock();

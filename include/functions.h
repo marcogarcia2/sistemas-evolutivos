@@ -8,8 +8,8 @@
 #include <math.h>
 
 #define POP_SIZE 8
-#define MAX_GENERATIONS 30
-#define MUTATION_RATE 0.9 // escolher entre 0 e 1, entenda como porcentagem
+#define MAX_GENERATIONS 200
+#define MUTATION_RATE 0.5 // escolher entre 0 e 1, entenda como porcentagem
 #define MUTATION_SCALE 50 // escolher entre 0 e 255, entenda como incremento no valor da cor caso haja mutação
 
 // Estrutura para representar um indivíduo
