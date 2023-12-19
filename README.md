@@ -1,7 +1,8 @@
 # Sistemas Evolutivos
 ## Projeto da disciplina SSC0713 - Sistemas Evolutivos
-**Professor:** Eduardo do Valle Simões
-**Vídeo de Apresentação:** 
+- **Professor:** Eduardo do Valle Simões
+
+- **Vídeo de Apresentação:** 
 
 O projeto consiste na geração de imagens que evoluem a partir dos conceitos de Algoritmos Genéticos aprendidos em sala de aula. O projeto pode evoluir uma imagem do zero para uma imagem escolhida, ou fazer a mescla de duas imagens a escolha do usuário.
 
@@ -18,10 +19,6 @@ O projeto consiste na geração de imagens que evoluem a partir dos conceitos de
   MUTATION_RATE: 0.50<br>
   MUTATION_SCALE: 15
 </p>
-
-
-
-
 
 ## Descrição
 O programa ```generator.py``` lê os pixels de uma imagem e a partir disso cria o arquivo ```target.txt```, com um cabeçalho informando as dimensões da imagem seguido de todas as triplas RGB referentes aos pixels. O programa em ```C``` abre este arquivo de texto e a partir dele cria um indivíduo "perfeito", que irá balizar a evolução que se inicia a partir de uma população de pixels totalmente aleatória.
@@ -93,64 +90,49 @@ Esta é a intensidade da mutação, quando sofrida por um indivíduo. Não é in
 
 ## Galeria
 
-<div style="text-align:center">
-  <figure style="display:inline-block">
-    <img src="apresentacao/noite-estrelada.jpeg" alt="" style="width:400px;height:250px;margin-right:10px">
-    <figcaption></figcaption>
-  </figure>
-  <figure style="display:inline-block">
-    <img src="apresentacao/noite-estrelada.gif" alt="" style="width:400px;height:250px">
-    <figcaption></figcaption>
-  </figure>
-</div>
-<figcaption style="text-align:center">
+### Noite Estrelada
+<p align="center">
+  <img src="apresentacao/noite-estrelada.jpeg" alt="Imagem1" width="400px" height="250px">
+  <img src="apresentacao/noite-estrelada.gif" alt="Imagem2" width="400px" height="250px">
+</p>
+
+<p align="center">
   <b>Parâmetros:</b><br>
   POP_SIZE: 6<br>
   MAX_GENERATIONS: 30<br>
   MUTATION_RATE: 0.70<br>
   MUTATION_SCALE: 25
-</figcaption>
+</p>
 
-<div style="text-align:center">
-  <figure style="display:inline-block">
-    <img src="apresentacao/simas.jpeg" alt="Simões" style="width:250px;height:250px;margin-right:10px">
-    <figcaption>Simões</figcaption>
-  </figure>
-  <figure style="display:inline-block">
-    <img src="apresentacao/simasgates.gif" alt="Simas Gates" style="width:250px;height:250px;margin-right:10px">
-    <figcaption>Simas Gates</figcaption>
-  </figure>
-  <figure style="display:inline-block">
-    <img src="apresentacao/billgates.jpeg" alt="Bill Gates" style="width:250px;height:250px">
-    <figcaption>Bill Gates</figcaption>
-  </figure>
-</div>
-<figcaption style="text-align:center">
-<b>Parâmetros:</b><br>
-POP_SIZE: 10<br>
-MAX_GENERATIONS: 40<br>
-MUTATION_RATE: 0.60<br>
-MUTATION_SCALE: 15<br>
-</figcaption>
+___
 
-<div style="text-align:center">
-  <figure style="display:inline-block">
-    <img src="apresentacao/blue.jpeg" alt="Casinha Azul" style="width:250px;height:175px;margin-right:10px">
-    <figcaption>Azul</figcaption>
-  </figure>
-  <figure style="display:inline-block">
-    <img src="apresentacao/purple.gif" alt="Casinha Roxa" style="width:250px;height:175px;margin-right:10px">
-    <figcaption>Roxo</figcaption>
-  </figure>
-  <figure style="display:inline-block">
-    <img src="apresentacao/red.jpeg" alt="Casinha Vermelha" style="width:250px;height:175px">
-    <figcaption>Vermelho</figcaption>
-  </figure>
-</div>
-<figcaption style="text-align:center">
-<b>Parâmetros:</b><br>
-POP_SIZE: 10<br>
-MAX_GENERATIONS: 40<br>
-MUTATION_RATE: 0.60<br>
-MUTATION_SCALE: 15<br>
-</figcaption>
+### Simões + Bill Gates
+
+<p align="center">
+  <img src="apresentacao/simas.jpeg" alt="Imagem1" width="250px" height="250px">
+  <img src="apresentacao/simasgates.gif" alt="Imagem2" width="250px" height="250px">
+  <img src="apresentacao/billgates.jpeg" alt="Imagem3" width="250px" height="250px">
+</p>
+
+<p align="center">
+  <b>Parâmetros:</b><br>
+  POP_SIZE: 10<br>
+  MAX_GENERATIONS: 40<br>
+  MUTATION_RATE: 0.60<br>
+  MUTATION_SCALE: 15<br>
+</p>
+
+<p align="center">
+  <img src="apresentacao/blue.jpeg" alt="Imagem1" width="250px" height="230px">
+  <img src="apresentacao/purple.gif" alt="Imagem2" width="250px" height="230px">
+  <img src="apresentacao/red.jpeg" alt="Imagem3" width="250px" height="230px">
+</p>
+
+<p align="center">
+  <b>AZUL + VERMELHO = ROXO</b><br>
+  <b>Parâmetros:</b><br>
+  POP_SIZE: 10<br>
+  MAX_GENERATIONS: 35<br>
+  MUTATION_RATE: 0.70<br>
+  MUTATION_SCALE: 15<br>
+</p>

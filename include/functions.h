@@ -7,10 +7,10 @@
 #include <time.h>
 #include <math.h>
 
-#define POP_SIZE 6
-#define MAX_GENERATIONS 30
+#define POP_SIZE 10
+#define MAX_GENERATIONS 35
 #define MUTATION_RATE 0.70 // escolher entre 0 e 1, entenda como porcentagem
-#define MUTATION_SCALE 25 // escolher entre 0 e 255, entenda como incremento no valor da cor caso haja mutação
+#define MUTATION_SCALE 15 // escolher entre 0 e 255, entenda como incremento no valor da cor caso haja mutação
 
 // Estrutura para representar um indivíduo
 typedef struct _individual{
