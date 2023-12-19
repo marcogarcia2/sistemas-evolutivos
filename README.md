@@ -114,7 +114,7 @@ Esta é a máxima intensidade da mutação, quando sofrida por um indivíduo. N�
 
 ___
 
-### :otter: Marmota de Óculos Escuro
+### :otter: Marmota de Óculos Escuros
 
 <p align="center">
   <img src="photos/srcimgs/marmota.jpeg" alt="Imagem1" width="400px" height="300px">
