@@ -2,7 +2,7 @@
 ## :dna: Projeto da disciplina SSC0713 - Sistemas Evolutivos
 - **Professor:** Eduardo do Valle Simões
 
-- **Vídeo de Apresentação:** 
+- **Vídeo de Apresentação:** https://youtu.be/A0HkwsQk_fA
 
 O projeto consiste na geração de imagens que evoluem a partir dos conceitos de Algoritmos Genéticos aprendidos em sala de aula. A ideia é evoluir uma imagem do zero para uma imagem escolhida, ou fazer a mescla de duas imagens.
 
