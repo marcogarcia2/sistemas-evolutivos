@@ -29,5 +29,5 @@ clean:
 commit:
 	make clean
 	git add .
-	git commit -m "Automatic commit"
+	git commit -m "Final"
 	git push origin main
